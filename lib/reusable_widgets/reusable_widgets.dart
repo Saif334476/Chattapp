@@ -12,12 +12,15 @@ TextFormField textFormField(
       int? maxLines
     }) {
   return TextFormField(
+    enableSuggestions: true,
+    style: TextStyle(color: Colors.white),
     minLines: 1,
     maxLines: maxLines,
     onChanged: onChanged,
     obscureText: obscuredText,
     keyboardType: keyboard,
     decoration: InputDecoration(
+//      fillColor: Colors.white,
       errorStyle: const TextStyle(color: Colors.red),
       errorBorder: OutlineInputBorder(
         borderSide: const BorderSide(color: Colors.red),
@@ -33,5 +36,22 @@ TextFormField textFormField(
     ),
     validator: validator,
     controller: controller,
+  );
+}
+
+Widget textButton({
+  required Widget text,
+  required VoidCallback onPressed,
+}) {
+  return
+    Container(
+        width: double.infinity,
+      decoration:BoxDecoration(borderRadius: BorderRadius.circular(15),color: Color(0xff00112B)),
+      child:
+    TextButton(
+    onPressed: onPressed,
+    child:
+      text,
+    )
   );
 }

@@ -11,13 +11,18 @@ class CallView extends StatefulWidget {
 class _CallViewState extends State<CallView> {
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      body: Center(
-        child: Text(
-          "Calls VIEW",
-          style: TextStyle(fontSize: 30),
+    return Scaffold(
+      body: Stack(children: [
+        Container(
+          color: Color(0xff1A2941),
         ),
-      ),
+        Center(
+          child: Text(
+            "Call logs will appear here",
+            style: TextStyle(fontSize: 25, color: Colors.white),
+          ),
+        )
+      ]),
     );
   }
 }

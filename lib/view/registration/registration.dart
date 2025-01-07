@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 //import 'package:image_picker/image_picker.dart';
 import 'package:whatsapp_clone/view/login/login.dart';
-
+import '../../reusable_widgets/profile_pic_widget.dart';
 import '../../reusable_widgets/reusable_widgets.dart';
 
 class Registration extends StatefulWidget {
@@ -24,15 +23,15 @@ class _RegistrationState extends State<Registration> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final _formKey = GlobalKey<FormState>();
-   final ImagePicker _picker = ImagePicker();
-  File? avatarImage;
+  final ImagePicker _picker = ImagePicker();
+  File? profilePicFile;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff4ECB5C),
-        automaticallyImplyLeading: true,
+        backgroundColor: const Color(0xff00112B),
+        automaticallyImplyLeading: false,
         title: const Text(
           "Registration",
           style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
@@ -50,63 +49,22 @@ class _RegistrationState extends State<Registration> {
           //   ),
           // ),
           Padding(
-            padding: const EdgeInsets.only(top: 80.0, left: 20, right: 20),
+            padding:  EdgeInsets.only(top:MediaQuery.of(context).size.height*0.05, left: 20, right: 20),
             child: Form(
               key: _formKey,
               child: Column(
                 children: [
-                  // const Text(
-                  //   "REGISTRATION",
-                  //   style: TextStyle(
-                  //       fontSize: 38,
-                  //       fontWeight: FontWeight.w900,
-                  //       color: Color(0xff4ECB5C)),
-                  // ),
-                  InkWell(
-                    onTap: () async {
-                      // final XFile? media =
-                      //     await _picker.pickImage(source: ImageSource.camera);
-                      // if (media != null) {
-                      //   File file = File(media.path);
-                      //   setState(() {
-                      //     avatarImage = file;
-                      //   });
-                      // }
-                    },
-                    child: Stack(
-                      children: [
-                        IconButton(
-                            onPressed: () async {
-                              // final XFile? media = await _picker.pickImage(
-                              //     source: ImageSource.camera);
-                              // if (media != null) {
-                              //   File file = File(media.path);
-                              //   setState(() {
-                              //     avatarImage = file;
-                              //   });
-                              // }
-                            },
-                            icon: const Icon(Icons.edit)),
-                        ClipOval(
-                          child: SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: avatarImage != null
-                                  ? Image.file(
-                                      avatarImage!,
-                                      fit: BoxFit.fill,
-                                    )
-                                  : Image.asset("assets/whatsapp.webp")),
-                        ),
-                      ],
-                    ),
+                  ProfilePicWidget(
+                    onImagePicked: (imageUrl) {
+                      setState(() {
+                        profilePicFile=imageUrl;
+                      });
+                    },uploadedProfileUrl: "",
                   ),
-
                   Padding(
-                    padding: const EdgeInsets.only(top: 50),
+                    padding:  EdgeInsets.only(top:MediaQuery.of(context).size.height*0.02, ),
                     child: textFormField(
                         "Enter your name", const Icon(Icons.person), false,
-
                         keyboard: TextInputType.text,
                         controller: _nameController, validator: (value) {
                       if (value!.isEmpty) {
@@ -118,8 +76,7 @@ class _RegistrationState extends State<Registration> {
                   const SizedBox(
                     height: 10,
                   ),
-                  textFormField("Enter your E-mail", Icon(Icons.person), false,
-
+                  textFormField("Enter your E-mail", Icon(Icons.email), false,
                       keyboard: TextInputType.text,
                       controller: _emailController, validator: (value) {
                     if (value!.isEmpty) {
@@ -130,8 +87,7 @@ class _RegistrationState extends State<Registration> {
                   const SizedBox(
                     height: 10,
                   ),
-                  textFormField("Create Password", Icon(Icons.person), false,
-
+                  textFormField("Create Password", Icon(Icons.password), false,
                       keyboard: TextInputType.text,
                       controller: _passwordController, validator: (value) {
                     if (value!.isEmpty) {
@@ -144,9 +100,8 @@ class _RegistrationState extends State<Registration> {
                   ),
                   textFormField(
                     "Confirm Password",
-                    const Icon(Icons.person),
+                    const Icon(Icons.password),
                     false,
-
                     keyboard: TextInputType.text,
                     controller: _confirmPasswordController,
                     validator: (value) {
@@ -162,13 +117,8 @@ class _RegistrationState extends State<Registration> {
                   const SizedBox(
                     height: 50,
                   ),
-                  CupertinoButton(
-                      color: const Color(0xff4ECB5C),
-                      child: const Text(
-                        "CREATE ACCOUNT",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w900, color: Colors.white),
-                      ),
+                  textButton(
+                      text:Text( "CREATE ACCOUNT",style: TextStyle(fontWeight: FontWeight.w900,color: Colors.white),),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           final credentials = await FirebaseAuth.instance
@@ -185,7 +135,7 @@ class _RegistrationState extends State<Registration> {
                             'name': _nameController.text,
                             'isComplete': false,
                             'email': _emailController.text,
-                          } ,SetOptions(merge: true) );
+                          }, SetOptions(merge: true));
 
                           showDialog(
                             context: context,

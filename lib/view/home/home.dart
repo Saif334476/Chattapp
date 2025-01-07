@@ -41,7 +41,7 @@ class HomePageState extends State<NHomePage> {
                 style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w900,
-                    color: Colors.white),
+                    color: Colors.white,fontFamily: "Courier",),
               ),
               Row(
                 children: [

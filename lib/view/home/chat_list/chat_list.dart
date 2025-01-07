@@ -19,8 +19,11 @@ class ChatList extends StatelessWidget {
         return Center(
           child: Stack(
             children: [
-              controller.chatList.isNotEmpty
-                  ? ListView.separated(
+              Stack(children: [
+                Container(color: Color(0xff1A2941),),
+        controller.chatList.isNotEmpty
+        ?
+              ListView.separated(
                       itemCount: controller.chatList.length,
                       itemBuilder: (BuildContext context, int index) {
                         final chat = controller.chatList[index];
@@ -33,7 +36,7 @@ class ChatList extends StatelessWidget {
                         var formattedTime =
                             DateFormat('HH:mm').format(lastMessageTime);
                         return ListTile(
-                          tileColor: const Color(0xce9dd1ff),
+                          tileColor: const Color(0xff1A2941),
                           //  textColor:const Color(0xc7cdd1ff) ,
                           onTap: () {
                             Navigator.push(
@@ -67,7 +70,7 @@ class ChatList extends StatelessWidget {
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.w900),
+                                    fontWeight: FontWeight.w900,color: Colors.white),
                               )),
                           subtitle: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,9 +82,9 @@ class ChatList extends StatelessWidget {
                                   child: Text(
                                     lastMessage,
                                     textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,
+                                    overflow: TextOverflow.ellipsis,style: TextStyle( color: Colors.white70),
                                   )),
-                              Text(formattedTime)
+                              Text(formattedTime,style: TextStyle( color: Colors.white70),)
                             ],
                           ),
                         );
@@ -90,14 +93,14 @@ class ChatList extends StatelessWidget {
                         return SizedBox(
                           height: 1,
                           child: Container(
-                            color: Colors.grey,
+                            color: Colors.white70,
                           ),
                         );
                       },
                     )
                   : Center(
-                      child: Text("No Active Chats"),
-                    ),
+                      child: Text("No Active Chats",style: TextStyle(color: Colors.white),),
+                    ),]),
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.7,
                 left: MediaQuery.of(context).size.width * 0.75,

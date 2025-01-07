@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:whatsapp_clone/view/home/chat/chat.dart';
 import '../../../Controllers/contact_list_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ContactList extends StatelessWidget {
   const ContactList({Key? key}) : super(key: key);
@@ -14,7 +15,8 @@ class ContactList extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: const Color(0xff00112B),
         title: const Text(
           "Contact List",
@@ -34,7 +36,15 @@ class ContactList extends StatelessWidget {
             final String email = contact.email;
             return ListTile(
               tileColor: Color(0xce9dd1ff),
-              onTap: () {
+              onTap: ()async {
+               final existingChat=await FirebaseFirestore.instance.collection("Whatsapp Clone")
+                   .doc("Data").collection("Chats")
+                   .where("participants",arrayContains:FirebaseAuth.instance.currentUser?.email).get();
+               final filteredChats = existingChat.docs.where((doc) {
+                 final participants = List<String>.from(doc.data()['participants'] ?? []);
+                 return participants.contains(email);
+               }).toList();
+               if(filteredChats.isEmpty){
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -43,7 +53,18 @@ class ContactList extends StatelessWidget {
                       recipentsId: email,
                     ),
                   ),
-                );
+                );}
+               else{
+                final existingChatId=filteredChats[0].id;
+                 Navigator.push(
+                   context,
+                   MaterialPageRoute(
+                     builder: (context) => ChatView(
+                       id: existingChatId,
+                     ),
+                   ),
+                 );
+               }
               },
               leading: Container(
                 padding: EdgeInsets.all(1),

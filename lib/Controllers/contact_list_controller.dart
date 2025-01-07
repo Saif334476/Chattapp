@@ -3,12 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import '../model/contact_model.dart';
 import '../model/chat_model.dart';
+import 'dart:async';
 
 class ContactListController extends GetxController {
   RxList<Contact> contactList = <Contact>[].obs;
   RxList<Chat> chatList = <Chat>[].obs;
    String? uid;
    String? userEmail;
+  StreamSubscription? chatSubscription;
   @override
   void onInit() {
      uid = FirebaseAuth.instance.currentUser?.uid;
@@ -17,7 +19,26 @@ class ContactListController extends GetxController {
     getContact(uid);
     getChats(userEmail);
   }
+  Future<void> handleLogout() async {
+    try {
+      await chatSubscription?.cancel();
+      chatSubscription = null;
 
+      contactList.clear();
+      chatList.clear();
+      uid = null;
+      userEmail = null;
+
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print("Error during logout: $e");
+    }
+  }
+  @override
+  void onClose() {
+    chatSubscription?.cancel();
+    super.onClose();
+  }
   Future<void> getContact(uid) async {
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore

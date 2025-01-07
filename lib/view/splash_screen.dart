@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone/login_sample.dart';
 import 'home/home.dart';
 import 'login/login.dart';
 
@@ -45,7 +46,9 @@ class _SplashScreenState extends State<SplashScreen> {
           height: MediaQuery.of(context).size.height * 0.3,
         ),
         SizedBox(
-            height: MediaQuery.of(context).size.height*0.25, width: MediaQuery.of(context).size.height*0.4 , child: Image.asset("assets/logo.webp")),
+            height: MediaQuery.of(context).size.height * 0.25,
+            width: MediaQuery.of(context).size.height * 0.4,
+            child: Image.asset("assets/logo.webp")),
         Text(
           "Chatapp",
           style: TextStyle(

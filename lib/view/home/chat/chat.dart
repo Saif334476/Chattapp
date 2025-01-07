@@ -53,7 +53,11 @@ class ChatView extends StatelessWidget {
           backgroundColor: const Color(0xff00112B),
         ),
         body: Obx(() {
-          return Column(children: [
+          return
+            Stack(children: [
+              Container(color: Color(0xff1A2941),),
+
+            Column(children: [
             Expanded(
               child: Padding(
                   padding: const EdgeInsets.all(5.0),
@@ -72,7 +76,8 @@ class ChatView extends StatelessWidget {
                       : Center(child: Text('Conversation not started.'))),
             ),
             messageField(),
-          ]);
+          ])]
+          );
         }));
   }
 
@@ -88,7 +93,7 @@ class ChatView extends StatelessWidget {
                   ? SizedBox(
                       child: IconButton(
                           onPressed: () {},
-                          icon: const Icon(Icons.attach_file_outlined)),
+                          icon: const Icon(Icons.attach_file_outlined,color: Colors.white,)),
                     )
                   : SizedBox(
                       width: 97,
@@ -97,16 +102,16 @@ class ChatView extends StatelessWidget {
                         children: [
                           IconButton(
                               onPressed: () {},
-                              icon: const Icon(Icons.attach_file_outlined),color: Color(0xff00112B)),
+                              icon: const Icon(Icons.attach_file_outlined),color: Colors.white),
                           IconButton(
                               onPressed: () {},
-                              icon: const Icon(Icons.camera_alt),color: Color(0xff00112B)),
+                              icon: const Icon(Icons.camera_alt),color: Colors.white),
                         ],
                       ),
                     ),
               "",
               IconButton(
-                icon: const Icon(Icons.emoji_emotions),
+                icon: const Icon(Icons.emoji_emotions,color: Colors.yellow,),
                 onPressed: () {
                   controller.isEmojiShowing.value =
                       !controller.isEmojiShowing.value;
@@ -132,10 +137,9 @@ class ChatView extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(5.0),
-            child: Material(
-              child: Container(
+            child:  Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
+                  shape: BoxShape.circle,
                     color: Color(0xff00112B)),
                 child: IconButton(
                   onPressed: () {
@@ -150,7 +154,6 @@ class ChatView extends StatelessWidget {
                           Icons.mic,
                           color: Colors.white,
                         ),
-                ),
               ),
             ),
           )
