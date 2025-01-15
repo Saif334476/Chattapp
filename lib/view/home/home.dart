@@ -14,9 +14,10 @@ class NHomePage extends StatefulWidget {
 
 class HomePageState extends State<NHomePage> {
   int _currentIndex = 0;
+  late PageController _pageController;
 
   final List<Widget> _children = [
-     ChatList(),
+    ChatList(),
     const GroupList(),
     const StatusView(),
     const CallView()
@@ -26,37 +27,75 @@ class HomePageState extends State<NHomePage> {
     setState(() {
       _currentIndex = index;
     });
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.easeInCubic,
+    );
+  }
+
+  String _currentScreen() {
+    switch (_currentIndex) {
+      case 0:
+        return "Chatapp";
+      case 1:
+        return "Groups";
+      case 2:
+        return "Status";
+      case 3:
+        return "Calls";
+      default:
+        return "Chats";
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+          automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Chatapp",
+              Text(
+                _currentScreen(),
                 style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,fontFamily: "Courier",),
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  fontFamily: "Courier",
+                ),
               ),
               Row(
                 children: [
                   IconButton(
                       onPressed: () {},
                       icon: const Icon(
-                        Icons.share,
+                        Icons.camera_alt,
                         color: Colors.white,
-                        size: 25,
+                      )),
+                  IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.search_rounded,
+                        color: Colors.white,
                       )),
                   IconButton(
                     icon: const Icon(
                       Icons.more_vert,
                       color: Colors.white,
-                      size: 30,
                     ),
                     onPressed: () {
                       final RenderBox button =
@@ -101,7 +140,11 @@ class HomePageState extends State<NHomePage> {
                           PopupMenuItem(
                             value: 'settings',
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>const SettingsView()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SettingsView()));
                             },
                             child: const Text('Settings'),
                           ),
@@ -114,7 +157,17 @@ class HomePageState extends State<NHomePage> {
             ],
           ),
           backgroundColor: const Color(0xff00112B)),
-      body: _children[_currentIndex],
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        children: _children,
+      ),
+      //   _children[_currentIndex],
+
       bottomNavigationBar: Container(
         // clipBehavior: Clip.hardEdge,
         // decoration: const BoxDecoration(
@@ -132,12 +185,11 @@ class HomePageState extends State<NHomePage> {
           items: const [
             BottomNavigationBarItem(
                 icon: Icon(Icons.chat_outlined), label: 'Chats'),
-            BottomNavigationBarItem(icon: Icon(Icons.group_rounded), label: 'Groups'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.circle_outlined ), label: 'Status'),
+                icon: Icon(Icons.group_rounded), label: 'Groups'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.phone), label: 'Calls'),
-
+                icon: Icon(Icons.circle_outlined), label: 'Status'),
+            BottomNavigationBarItem(icon: Icon(Icons.phone), label: 'Calls'),
           ],
           backgroundColor: const Color(0xff00112B),
           selectedItemColor: const Color(0xce9dd1ff),
