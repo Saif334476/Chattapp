@@ -56,7 +56,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
                   // Display image
                   return Image.memory(snapshot.data!, fit: BoxFit.contain);
                 } else if (currentMedia.type == AssetType.video) {
-                  // Display video player
+
                   return VideoPreview(asset: currentMedia);
                 }
 

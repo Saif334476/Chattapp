@@ -153,26 +153,8 @@ class _StatusViewState extends State<StatusView> {
         top: MediaQuery.of(context).size.height * 0.63,
         left: MediaQuery.of(context).size.width * 0.75,
         child: Column(children: [
-          ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.transparent),
-              elevation: MaterialStateProperty.all(0),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      10), // Adjust the border radius as needed
-                ),
-              ),
-            ),
-            onPressed: () {},
-            child: Material(
+         Material(
               color: Colors.transparent,
-              shape: const ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(15),
-                      topLeft: Radius.circular(15),
-                      bottomLeft: Radius.circular(15),
-                      bottomRight: Radius.zero)),
               elevation: 5,
               child: Container(
                 decoration: const BoxDecoration(
@@ -192,7 +174,6 @@ class _StatusViewState extends State<StatusView> {
                 ),
               ),
             ),
-          ),
           SizedBox(
             height: MediaQuery.sizeOf(context).height * 0.02,
           ),
@@ -242,7 +223,7 @@ class _StatusViewState extends State<StatusView> {
   }
 
   void _showCameraBottomSheet(BuildContext context) {
-
+    initializeCamera();
     showModalBottomSheet(
       useSafeArea: true,
       enableDrag: true,
@@ -291,14 +272,12 @@ class _StatusViewState extends State<StatusView> {
                           if (index == 0) {
                             return GestureDetector(
                               onTap: () async {
-                                initializeCamera();
                                 final cameras = await availableCameras();
                                 if (cameras.isNotEmpty) {
                                   final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => CameraScreen(
-                                        camera: cameras[0],recentMedia:recentMedia
+                                      builder: (context) => CameraScreen(recentMedia:recentMedia
                                       ),
                                     ),
                                   );

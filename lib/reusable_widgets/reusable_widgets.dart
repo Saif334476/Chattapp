@@ -39,7 +39,7 @@ TextFormField textFormField(
   );
 }
 
-Widget textButton({
+ textButton({
   required Widget text,
   required VoidCallback onPressed,
 }) {
@@ -53,5 +53,22 @@ Widget textButton({
     child:
       text,
     )
+  );
+}
+ElevatedButton extButton({
+  required Widget text,
+  required VoidCallback onPressed,
+
+}) {
+  return ElevatedButton(
+    onPressed: onPressed,
+
+    style: ElevatedButton.styleFrom(
+      elevation: 10,
+
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+    child: text,
   );
 }
