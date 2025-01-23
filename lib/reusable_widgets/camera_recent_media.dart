@@ -92,7 +92,7 @@ class _CameraAndMediaPickerState extends State<CameraAndMediaPicker> {
                           final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CameraScreen(recentMedia: recentMedia
+                              builder: (context) => CameraScreen(
                               ),
                             ),
                           );

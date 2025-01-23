@@ -4,6 +4,9 @@ import 'package:whatsapp_clone/reusable_widgets/camera_recent_media.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:camera/camera.dart';
 import 'dart:typed_data';
+import 'package:whatsapp_clone/Controllers/status_controller.dart';
+import 'package:get/get.dart';
+import 'package:whatsapp_clone/view/home/status/text_status.dart';
 import 'package:whatsapp_clone/reusable_widgets/camera_screen.dart';
 
 class StatusView extends StatefulWidget {
@@ -151,8 +154,11 @@ class _StatusViewState extends State<StatusView> {
       ),
       Positioned(
         top: MediaQuery.of(context).size.height * 0.63,
-        left: MediaQuery.of(context).size.width * 0.75,
+        left: MediaQuery.of(context).size.width * 0.8,
         child: Column(children: [
+          GestureDetector(
+            onTap:(){Get.to(()=>StatusScreen());},
+              child:
          Material(
               color: Colors.transparent,
               elevation: 5,
@@ -167,36 +173,22 @@ class _StatusViewState extends State<StatusView> {
                 ),
                 // color: const Color(0xff4ECB5C),
                 padding: const EdgeInsets.all(8),
-                child: const Icon(
+                child:
+                const Icon(
                   Icons.mode_edit_outlined,
                   size: 22,
                   color: Colors.white, // Icon color inside the filled container
                 ),
               ),
-            ),
+            )),
           SizedBox(
             height: MediaQuery.sizeOf(context).height * 0.02,
           ),
-          ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.transparent),
-              elevation: MaterialStateProperty.all(0),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      10), // Adjust the border radius as needed
-                ),
-              ),
-            ),
-            onPressed: () {},
-            child: Material(
+         GestureDetector(
+           onTap: (){_showCameraBottomSheet(context);},
+           child:
+         Material(
               color: Colors.transparent,
-              shape: const ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(15),
-                      topLeft: Radius.circular(15),
-                      bottomLeft: Radius.circular(15),
-                      bottomRight: Radius.zero)),
               elevation: 5,
               child: Container(
                 decoration: const BoxDecoration(
@@ -216,7 +208,7 @@ class _StatusViewState extends State<StatusView> {
                 ),
               ),
             ),
-          ),
+         )
         ]),
       ),
     ]));
@@ -272,20 +264,9 @@ class _StatusViewState extends State<StatusView> {
                           if (index == 0) {
                             return GestureDetector(
                               onTap: () async {
-                                final cameras = await availableCameras();
-                                if (cameras.isNotEmpty) {
-                                  final result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CameraScreen(recentMedia:recentMedia
-                                      ),
-                                    ),
-                                  );
-
-                                  if (result != null) {
-                                    debugPrint('Captured image path: $result');
-                                  }
-                                }
+                                final StatusController statusController = Get.put(StatusController());
+                                statusController.currentMode.value="image";
+                                Get.to(()=>StatusScreen());
                               },
                               child: Container(
                                 color: Colors.transparent,
