@@ -1,4 +1,4 @@
-name: whatsapp_clone
+name: home_automation
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -30,18 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
-  firebase_core: ^3.9.0
-  flutter_plugin_android_lifecycle: ^2.0.0
-  firebase_auth: ^5.3.0
-  cloud_firestore: ^5.5.1
-  intl: ^0.20.1
+
   image_picker: ^1.1.2
-  get: ^4.6.6
-  camera: ^0.11.0+2
-  photo_manager: ^3.6.3
-  video_player: ^2.9.2
-  flutter_keyboard_visibility: ^6.0.0
+  webview_flutter: ^4.10.0
 
 dev_dependencies:
   flutter_test:
