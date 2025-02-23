@@ -17,13 +17,10 @@ class ChatList extends StatelessWidget {
       body: Obx(() {
         return Stack(
           children: [
-            // 🎨 Gradient Background Instead of Solid Color
             Container(
               decoration:
                   BoxDecoration(color: Color(0xFF81C784).withOpacity(0.1)),
             ),
-
-            // 📝 Chat List
             controller.chatList.isNotEmpty
                 ? ListView.separated(
                     padding: const EdgeInsets.symmetric(
@@ -31,20 +28,20 @@ class ChatList extends StatelessWidget {
                     itemCount: controller.chatList.length,
                     itemBuilder: (BuildContext context, int index) {
                       final chat = controller.chatList[index];
-                      var chatId = chat.chatId;
                       var lastMessage = chat.lastMessage;
                       var lastMessageTime =
                           chat.lastMessageTime ?? DateTime.now();
                       var formattedTime =
                           DateFormat('HH:mm').format(lastMessageTime);
-
                       return Card(
                         margin: const EdgeInsets.symmetric(vertical: 5),
                         child: ListTile(
                           onTap: () {
                             Get.to(
                                 () => ChatView(
-                                      id: chatId,
+                                      id: chat.chatId,
+                                      name: controller
+                                          .recipientNames[chat.chatId],
                                       recipentsId: chat.participants.firstWhere(
                                         (id) =>
                                             id !=
@@ -91,7 +88,7 @@ class ChatList extends StatelessWidget {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.7,
                                 child: Text(
-                                  chatId,
+                                  controller.recipientNames[chat.chatId] ?? "",
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium

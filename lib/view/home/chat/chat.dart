@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import '../../../Controllers/chat_controller.dart';
 
 class ChatView extends StatelessWidget {
-  ChatView({super.key, required this.id, this.recipentsId,this.type})
+  ChatView({super.key, required this.id, this.recipentsId,this.type,this.name})
       : controller = Get.put(ChatController(id, recipentsId,type),tag: id);
-
+   final String? name;
   final ChatController controller;
   final String id;
   final String? recipentsId;
@@ -40,7 +40,7 @@ class ChatView extends StatelessWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.6,
                 child: Text(
-                  id,
+                  name!,
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,color: Colors.white,
 

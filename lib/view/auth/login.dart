@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:whatsapp_clone/Controllers/contact_list_controller.dart';
 import 'package:whatsapp_clone/view/auth/registration.dart';
+import '../../chat_bubble.dart';
+import '../../reusable_widgets/custom_button.dart';
 import '../home/home.dart';
 import '../home/settings_view/password_reset_view.dart';
-import '../../reusable_widgets/reusable_widgets.dart';
-import 'package:whatsapp_clone/Controllers/contact_list_controller.dart';
-import 'package:get/get.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -25,218 +25,172 @@ class _LoginViewState extends State<LoginView> {
     ContactListController controller = Get.find<ContactListController>();
     controller.userEmail = userEmail!;
     controller.uid = uid!;
-    await controller.getContact(uid!);
-    await controller.getChats(userEmail!);
+    await controller.getContact(uid);
+    await controller.getChats(userEmail);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(children: [
-      ClipPath(
-        clipper: CustomClipperDesign(),
-        child: Container(
-          height: 300,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xff1A2941), Color(0xff00112B)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF4CAF50), Color(0xFF81C784)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
           ),
-        ),
-      ),
-      SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.15,
-                  right: 20,
-                  left: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "Chatapp",
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      fontFamily: "Courier",
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.15,
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.15),
-                    child: TextFormField(
+                    Center(child: AnimatedChatBubble()), // Animated bubble
+                    const SizedBox(height: 50),
+                    Text(
+                      "Welcome Back!",
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Login to continue",
+                      style: TextStyle(fontSize: 16, color: Colors.white70),
+                    ),
+                    SizedBox(height: 40),
+                    TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.email),
-                        label: const Text("Enter Your Email"),
+                        labelText: "Email Address",
+                        prefixIcon: Icon(Icons.email, color: Colors.white),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity(0.2),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
                         ),
-                        errorStyle: const TextStyle(color: Colors.red),
-                        errorBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                        ),
+                        labelStyle: TextStyle(color: Colors.white70),
                       ),
+                      style: TextStyle(color: Colors.white),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Enter Your E-mail";
-                        } else if (!RegExp(
-                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-                            .hasMatch(value!)) {
-                          return 'Please enter a valid email address';
+                          return "Enter your email";
+                        } else if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
+                            .hasMatch(value)) {
+                          return 'Please enter a valid email';
                         }
                         return null;
                       },
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: TextFormField(
+                    SizedBox(height: 15),
+                    TextFormField(
                       controller: _passwordController,
+                      obscureText: true,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.password),
-                        label: const Text("Enter Your Password"),
+                        labelText: "Password",
+                        prefixIcon: Icon(Icons.lock, color: Colors.white),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity(0.2),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
                         ),
-                        errorStyle: const TextStyle(color: Colors.red),
-                        errorBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                        ),
+                        labelStyle: TextStyle(color: Colors.white70),
                       ),
+                      style: TextStyle(color: Colors.white),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Enter your Password";
+                          return "Enter your password";
                         }
                         return null;
                       },
                     ),
-                  ),
-                  Row(
-                    children: [
-                      const Text("Forgotten Password,"),
-                      InkWell(
-                        onTap: () {
+                    SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const PasswordResetView()));
-                        },
-                        child: const Text(
-                          "Reset your Password!",
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.035,
-                  ),
-                 textButton(
-                          text:  _isLoading
-                              ? 
-                          Row(mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                            Text("Logging In... ", style: const TextStyle(fontWeight: FontWeight.w900,color: Colors.white,fontSize: 12),),
-                            const SizedBox(
-                              height: 25,
-                              width: 25,
-                              child: CupertinoActivityIndicator(
-                                color: Colors.white,
-                              ))])
-                              :Text( "LOGIN", style: const TextStyle(fontWeight: FontWeight.w900,color: Colors.white,fontSize: 17),),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              setState(() {
-                                _isLoading=true;
-                              });
-                              FirebaseAuth.instance
-                                  .signInWithEmailAndPassword(
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                              )
-                                  .then((userCredential) {
-                                handleLogin(
-                                    FirebaseAuth.instance.currentUser?.email,
-                                    FirebaseAuth.instance.currentUser?.uid);
-                                   setState(() {
-                                     _isLoading=false;
-                                   });
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const NHomePage()));
-                              }).catchError((error) {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                          title: Column(
-                                            children: [
-                                              Text(
-                                                error.toString(),
-                                                style: const TextStyle(
-                                                    fontSize: 14),
-                                              ),
-                                              CupertinoButton(
-                                                  color:
-                                                      const Color(0xff00112B),
-                                                  child: const Text(
-                                                    "OK",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w900,
-                                                        color: Colors.white,
-                                                        fontSize: 16),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  })
-                                            ],
-                                          ),
-                                          backgroundColor: Colors.white,
-                                        ));
-                              });
-                            }
-                          }),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  textButton(
-                      text:Text( "REGISTER", style: const TextStyle(fontWeight: FontWeight.w900,color: Colors.white,fontSize: 17),),
-                      onPressed: () {
-                        Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const Registration()));
-                      }),
-                ],
-              )),
-        ),
+                              builder: (context) => const PasswordResetView(),
+                            ),
+                          );
+                        },
+                        child: Text("Forgot Password?",
+                            style: TextStyle(color: Colors.white70)),
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    CustomButton(
+                      text: "LOGIN",
+                      isLoading: _isLoading,
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() => _isLoading = true);
+                          FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                          )
+                              .then((userCredential) {
+                            handleLogin(
+                              FirebaseAuth.instance.currentUser?.email,
+                              FirebaseAuth.instance.currentUser?.uid,
+                            );
+                            setState(() => _isLoading = false);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const NHomePage(),
+                              ),
+                            );
+                          }).catchError((error) {
+                            setState(() => _isLoading = false);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(error.toString())),
+                            );
+                          });
+                        }
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    Center(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Registration(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Don't have an account? Sign up",
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
-    ]));
+    );
   }
-}
-
-class CustomClipperDesign extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.lineTo(0, size.height * 0.75);
-    path.quadraticBezierTo(
-        size.width * 0.5, size.height, size.width, size.height * 0.75);
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

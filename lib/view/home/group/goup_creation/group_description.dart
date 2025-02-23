@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:whatsapp_clone/model/chat_model.dart';
 import 'package:whatsapp_clone/reusable_widgets/reusable_widgets.dart';
 import 'package:whatsapp_clone/view/home/chat/chat.dart';
 import 'package:whatsapp_clone/view/home/group/goup_creation/controller.dart';
@@ -74,15 +72,12 @@ class GroupDescription extends StatelessWidget {
                     child: GridView.builder(
                   itemCount: controller.selectedForGroup.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // Number of columns
-                    crossAxisSpacing: 8.0, // Spacing between columns
-                    mainAxisSpacing: 8.0, // Spacing between rows
-                    childAspectRatio:
-                        1.0, // Width to height ratio of grid items
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 8.0,
+                    mainAxisSpacing: 8.0,
+                    childAspectRatio: 1.0,
                   ),
                   itemBuilder: (context, index) {
-                    final contact = controller.selectedForGroup[
-                        index]; // Assuming 'contacts' is a List<Contact>
                     return Card(
                       color: Color(0xFF91C784),
                       child: Container(
@@ -129,7 +124,11 @@ class GroupDescription extends StatelessWidget {
                 Get.back();
                 Get.back();
                 Get.to(
-                    () => ChatView(id: "chatIds",recipentsId: null,type: "group",),
+                    () => ChatView(
+                          id: "chatIds",
+                          recipentsId: null,
+                          type: "group",
+                        ),
                     transition: Transition.leftToRightWithFade,
                     duration: Duration(milliseconds: 300));
               },

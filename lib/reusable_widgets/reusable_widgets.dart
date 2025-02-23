@@ -25,7 +25,7 @@ TextFormField textFormField(
 //         borderRadius: BorderRadius.circular(15),
 //       ),
       border: OutlineInputBorder(
-       // borderSide: const BorderSide(color: Color(0xff00112B)),
+        // borderSide: const BorderSide(color: Color(0xff00112B)),
         borderRadius: BorderRadius.circular(15),
       ),
       labelText: text,
@@ -40,11 +40,15 @@ TextFormField textFormField(
 textButton({
   required Widget text,
   required VoidCallback onPressed,
+  required BuildContext context,
 }) {
   return Container(
       width: double.infinity,
+
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), color: Color(0xff00112B)),
+        borderRadius: BorderRadius.circular(8),
+        color: Theme.of(context).primaryColor,
+      ),
       child: TextButton(
         onPressed: onPressed,
         child: text,
@@ -68,13 +72,12 @@ ElevatedButton extButton({
 
 Container iconButton({required VoidCallback onPressed, required Widget icon}) {
   return Container(
-  //  decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),    color: Color(0xff00112B),),
+      //  decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),    color: Color(0xff00112B),),
 
       child: IconButton(
     onPressed: onPressed,
     icon: icon,
-   // splashColor: Colors.black,
+    // splashColor: Colors.black,
     splashRadius: 5,
-  )
-  );
+  ));
 }
