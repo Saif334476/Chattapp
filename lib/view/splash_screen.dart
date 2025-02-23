@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/login_sample.dart';
 import 'home/home.dart';
-import 'login/login.dart';
+import 'auth/login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

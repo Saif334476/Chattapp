@@ -5,12 +5,13 @@ import 'package:get/get.dart';
 import '../../../Controllers/chat_controller.dart';
 
 class ChatView extends StatelessWidget {
-  ChatView({super.key, required this.id, this.recipentsId})
-      : controller = Get.put(ChatController(id, recipentsId),tag: id);
+  ChatView({super.key, required this.id, this.recipentsId,this.type})
+      : controller = Get.put(ChatController(id, recipentsId,type),tag: id);
 
   final ChatController controller;
   final String id;
   final String? recipentsId;
+  final String? type;
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +51,12 @@ class ChatView extends StatelessWidget {
               IconButton(onPressed: () {}, icon: const Icon(Icons.phone),color: Colors.white,)
             ],
           ),
-          backgroundColor: const Color(0xff00112B),
+          backgroundColor: const Color(0xFF388E3C),
         ),
         body: Obx(() {
           return
             Stack(children: [
-              Container(color: Color(0xff1A2941),),
+              Container(color:Color(0xFF81C784).withOpacity(0.1),),
 
             Column(children: [
             Expanded(
@@ -102,10 +103,10 @@ class ChatView extends StatelessWidget {
                         children: [
                           IconButton(
                               onPressed: () {},
-                              icon: const Icon(Icons.attach_file_outlined),color: Colors.white),
+                              icon: const Icon(Icons.attach_file_outlined),color: Color(0xFF388E3C)),
                           IconButton(
                               onPressed: () {},
-                              icon: const Icon(Icons.camera_alt),color: Colors.white),
+                              icon: const Icon(Icons.camera_alt),color: Color(0xFF388E3C)),
                         ],
                       ),
                     ),
@@ -139,8 +140,8 @@ class ChatView extends StatelessWidget {
             padding: const EdgeInsets.all(5.0),
             child:  Container(
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                    color: Color(0xff00112B)),
+               borderRadius: BorderRadius.circular(12),
+                    color: Color(0xFF388E3C)),
                 child: IconButton(
                   onPressed: () {
                     controller.sendMessage();

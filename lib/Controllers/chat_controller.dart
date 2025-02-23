@@ -7,27 +7,29 @@ import 'package:whatsapp_clone/model/message_model.dart';
 class ChatController extends GetxController {
   String chatId;
   String? recipentsId;
-  ChatController(this.chatId,this.recipentsId);
+  String? type;
+  ChatController(this.chatId, this.recipentsId, this.type);
   RxList<MessageModel> messages = <MessageModel>[].obs;
   RxBool isEmojiShowing = false.obs;
   RxBool isWriting = false.obs;
   late TextEditingController messageController;
 
-
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
     messageController = TextEditingController();
     getMessagesCollectionStream();
   }
+
   @override
   void onClose() {
     messageController.dispose();
     super.onClose();
   }
+
   void getMessagesCollectionStream() {
     try {
-      Stream<QuerySnapshot> allMessages= FirebaseFirestore.instance
+      Stream<QuerySnapshot> allMessages = FirebaseFirestore.instance
           .collection('Whatsapp Clone')
           .doc('Data')
           .collection('Chats')
@@ -35,9 +37,10 @@ class ChatController extends GetxController {
           .collection('Messages')
           .orderBy('sentAt')
           .snapshots();
-     allMessages.listen((QuerySnapshot snapshot) {
+      allMessages.listen((QuerySnapshot snapshot) {
         messages.value = snapshot.docs
-            .map((doc) => MessageModel.fromJson(doc.data() as Map<String,dynamic>))
+            .map((doc) =>
+                MessageModel.fromJson(doc.data() as Map<String, dynamic>))
             .toList();
       });
     } catch (e) {
@@ -51,35 +54,37 @@ class ChatController extends GetxController {
     final text = messageController.text.trim();
     messageController.clear();
     isWriting.value = false;
+    if (type == "single") {
+      if (recipentsId != null) {
+        await FirebaseFirestore.instance
+            .collection("Whatsapp Clone")
+            .doc("Data")
+            .collection("Chats")
+            .doc(chatId)
+            .set({
+          "participants": [
+            FirebaseAuth.instance.currentUser?.email,
+            recipentsId,
+          ],
+          "chatType": "single",
+          "lastMessage": text,
+          "lastMessageTime": DateTime.now(),
+          "createdAt": DateTime.now(),
+          "chatId": chatId,
+        }, SetOptions(merge: true));
+      } else {
 
-    if (recipentsId != null) {
-      await FirebaseFirestore.instance
-          .collection("Whatsapp Clone")
-          .doc("Data")
-          .collection("Chats")
-          .doc(chatId)
-          .set({
-        "participants": [
-          FirebaseAuth.instance.currentUser?.email,
-          recipentsId,
-        ],
-        "lastMessage": text,
-        "lastMessageTime": DateTime.now(),
-        "createdAt": DateTime.now(),
-        "chatId": chatId,
-      }, SetOptions(merge: true));
-    } else {
-      await FirebaseFirestore.instance
-          .collection("Whatsapp Clone")
-          .doc("Data")
-          .collection("Chats")
-          .doc(chatId)
-          .set({
-        "lastMessage": text,
-        "lastMessageTime": DateTime.now(),
-      }, SetOptions(merge: true));
+      }
     }
-
+    await FirebaseFirestore.instance
+        .collection("Whatsapp Clone")
+        .doc("Data")
+        .collection("Chats")
+        .doc(chatId)
+        .set({
+      "lastMessage": text,
+      "lastMessageTime": DateTime.now(),
+    }, SetOptions(merge: true));
     final newMessage = MessageModel(
       messageId: DateTime.now().toString(),
       message: text,

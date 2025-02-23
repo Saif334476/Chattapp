@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/view/home/settings_view/password_reset_view.dart';
-import 'package:whatsapp_clone/view/login/login.dart';
+import 'package:whatsapp_clone/view/auth/login.dart';
 import 'dart:io';
 import 'package:whatsapp_clone/reusable_widgets/profile_pic_widget.dart';
 import 'package:whatsapp_clone/Controllers/contact_list_controller.dart';

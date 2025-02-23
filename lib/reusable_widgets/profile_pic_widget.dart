@@ -82,7 +82,7 @@ class ProfilePicWidgetState extends State<ProfilePicWidget> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.black),
               borderRadius: BorderRadius.circular(100),
-              color: const Color(0xff1C4374),
+              color: const Color(0xFF388E3C),
             ),
             child: IconButton(
               onPressed: _pickImage,

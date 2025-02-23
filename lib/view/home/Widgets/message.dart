@@ -11,6 +11,7 @@ class MessageView extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isMe =
         messageModeled.senderId == FirebaseAuth.instance.currentUser?.uid;
+    bool isSystem= messageModeled.senderId=="system";
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: IntrinsicWidth(
@@ -29,6 +30,7 @@ class MessageView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
               Text(
                 messageModeled.message,
                 style: const TextStyle(

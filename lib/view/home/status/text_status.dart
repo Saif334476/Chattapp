@@ -6,8 +6,9 @@ import 'package:whatsapp_clone/Controllers/status_controller.dart';
 import 'package:whatsapp_clone/reusable_widgets/camera_screen.dart';
 
 class TextStatusScreen extends StatelessWidget {
-  final ColorController colorController = Get.put(ColorController());
-
+  final ColorController colorController = Get.isRegistered<ColorController>()
+      ? Get.find<ColorController>()
+      : Get.put(ColorController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,6 +16,8 @@ class TextStatusScreen extends StatelessWidget {
       body: Stack(
         children: [
           Obx(() => Container(
+            height: MediaQuery.sizeOf(context).height,
+            width: MediaQuery.sizeOf(context).width,
                 color: colorController.currentColor.value,
                 child: Center(
                   child: Container(

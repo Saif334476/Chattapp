@@ -10,17 +10,16 @@ class ContactList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final ContactListController controller = Get.put(ContactListController());
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
         iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: const Color(0xff00112B),
+        backgroundColor: const Color(0xFF388E3C),
         title: const Text(
           "Contact List",
-          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+          style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
         ),
       ),
       body: Obx(() {
@@ -29,78 +28,91 @@ class ContactList extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-        return ListView.separated(
-          itemCount: controller.contactList.length,
-          itemBuilder: (BuildContext context, int index) {
-            final contact = controller.contactList[index];
-            final String email = contact.email;
-            return ListTile(
-              tileColor: Color(0xce9dd1ff),
-              onTap: ()async {
-               final existingChat=await FirebaseFirestore.instance.collection("Whatsapp Clone")
-                   .doc("Data").collection("Chats")
-                   .where("participants",arrayContains:FirebaseAuth.instance.currentUser?.email).get();
-               final filteredChats = existingChat.docs.where((doc) {
-                 final participants = List<String>.from(doc.data()['participants'] ?? []);
-                 return participants.contains(email);
-               }).toList();
-               if(filteredChats.isEmpty){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatView(
-                      id: "${FirebaseAuth.instance.currentUser?.email}-$email",
-                      recipentsId: email,
+        return Stack(
+          children: [
+            Container(
+              decoration:
+                  BoxDecoration(color: Color(0xFF81C784).withOpacity(0.1)),
+            ),
+            ListView.separated(
+              itemCount: controller.contactList.length,
+              itemBuilder: (BuildContext context, int index) {
+                final contact = controller.contactList[index];
+                final String email = contact.email;
+                return Card(
+                  child: ListTile(
+                    onTap: () async {
+                      final existingChat = await FirebaseFirestore.instance
+                          .collection("Whatsapp Clone")
+                          .doc("Data")
+                          .collection("Chats")
+                          .where("chatType", isEqualTo: "single")
+                          .where("participants",
+                              arrayContains:
+                                  FirebaseAuth.instance.currentUser?.email)
+                          .get();
+                      final filteredChats = existingChat.docs.where((doc) {
+                        final participants =
+                            List<String>.from(doc.data()['participants'] ?? []);
+                        return participants.contains(email);
+                      }).toList();
+                      if (filteredChats.isEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatView(
+                              id: "${FirebaseAuth.instance.currentUser?.email}-$email",
+                              recipentsId: email,
+                            ),
+                          ),
+                        );
+                      } else {
+                        final existingChatId = filteredChats[0].id;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatView(
+                              id: existingChatId,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    leading: Container(
+                      padding: EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.transparent,
+                      ),
+                      height: 50,
+                      width: 50,
+                      child: ClipOval(
+                        child: Image.asset(
+                          "assets/person.webp",
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                    title: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      child: Text(
+                        email,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ),
                   ),
-                );}
-               else{
-                final existingChatId=filteredChats[0].id;
-                 Navigator.push(
-                   context,
-                   MaterialPageRoute(
-                     builder: (context) => ChatView(
-                       id: existingChatId,
-                     ),
-                   ),
-                 );
-               }
+                );
               },
-              leading: Container(
-                padding: EdgeInsets.all(1),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(100),
-                  color: Colors.transparent,
-                ),
-                height: 50,
-                width: 50,
-                child: ClipOval(
-                  child: Image.asset(
-                    "assets/person.webp",
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-              title: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.6,
-                child: Text(
-                  email,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return Container(
-              decoration: const BoxDecoration(color: Colors.grey),
-              height: 1,
-            );
-          },
+              separatorBuilder: (BuildContext context, int index) {
+                return Container();
+              },
+            ),
+          ],
         );
       }),
     );

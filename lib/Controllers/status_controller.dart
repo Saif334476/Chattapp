@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -22,97 +23,111 @@ class ColorController extends GetxController {
   }
 }
 
-class StatusController extends GetxController {
 
-  RxString currentMode = 'text'.obs;
-  RxBool isRecording = false.obs;
-  RxBool isVideoMode = false.obs;
+class StatusScreensControllers extends GetxController {
+  RxString currentMode = 'image'.obs;
+  final CameraScreenController cameraController = Get.isRegistered<CameraScreenController>()
+      ? Get.find<CameraScreenController>()
+      : Get.put(CameraScreenController());
+
+  void changeMode(String mode) {
+    if ((currentMode.value == 'image' || currentMode.value == 'video') && (mode == "image" || mode == "video")) {
+      currentMode.value = mode;
+    } else if ((currentMode.value == 'image' || currentMode.value == "video") && mode == "text") {
+     // cameraController.pauseCamera();
+      currentMode.value = mode;
+    } else if (currentMode.value == 'text' && (mode == "image" || mode == "video")) {
+     // cameraController.resumeCamera();
+      currentMode.value = mode;
+
+    }
+  }
+}
+
+class CameraScreenController extends GetxController {
+  RxBool isCameraInitialized = false.obs;
+  CameraController? cameraController;
+  List<CameraDescription> cameras=[];
+  RxInt selectedCameraIndex = 0.obs;
   RxBool isFlashOn = false.obs;
 
-  CameraController? cameraController;
-  List<CameraDescription>? cameras;
-  RxInt selectedCameraIndex = 0.obs;
-  late Future<void> initializeControllerFuture;
 
   @override
   void onInit() {
     super.onInit();
-    _initializeCamera();
+    initializeCamera();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
   }
 
   @override
   void onClose() {
-    cameraController?.dispose();
+    disposeCamera();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.onClose();
   }
-  void changeMode(String mode) {
-    currentMode.value = mode;
+  Future<void> disposeCamera() async {
+    if (cameraController != null) {
+      await cameraController!.dispose();
+      cameraController = null;
+      isCameraInitialized.value = false;
+    }
   }
-  Future<void> _initializeCamera() async {
+  Future<void> initializeCamera() async {
     try {
       cameras = await availableCameras();
-      if (cameras != null && cameras!.isNotEmpty) {
+      if (cameras.isNotEmpty) {
         cameraController = CameraController(
-          cameras![selectedCameraIndex.value],
+          cameras[selectedCameraIndex.value],
           ResolutionPreset.high,
         );
-        initializeControllerFuture = cameraController!.initialize();
-        update();
-      } else {
-        print('No cameras found');
+        await cameraController!.initialize();
+        isCameraInitialized.value = true;
       }
     } catch (e) {
-      print('Error initializing camera: $e');
+      print("Camera initialization error: $e");
+      isCameraInitialized.value = false;
     }
   }
 
-  void toggleFlashlight() async {
-    try {
+
+  void toggleFlashlight() {
+    if (cameraController != null) {
       isFlashOn.value = !isFlashOn.value;
-      await cameraController
-          ?.setFlashMode(isFlashOn.value ? FlashMode.torch : FlashMode.off);
-    } catch (e) {
-      print("Error toggling flashlight: $e");
+      cameraController!.setFlashMode(isFlashOn.value ? FlashMode.torch : FlashMode.off);
     }
   }
 
-  void switchCamera() async {
-    if (cameras == null || cameras!.isEmpty) return;
+  // Future<void> switchCamera() async {
+  //   if (cameras.isEmpty) return;
+  //
+  //   selectedCameraIndex.value = (selectedCameraIndex.value + 1) % cameras.length;
+  //   await cameraController?.dispose();
+  //   isCameraInitialized.value = false;
+  //   await initializeCamera();
+  // }
+  Future<void> switchCamera() async {
+    if (cameras.isEmpty) return;
 
-    await cameraController?.dispose();
-    selectedCameraIndex.value = (selectedCameraIndex.value + 1) % cameras!.length;
+    // Dispose old camera before switching
+    await disposeCamera();
 
-    cameraController = CameraController(
-      cameras![selectedCameraIndex.value],
-      ResolutionPreset.high,
-    );
-    initializeControllerFuture = cameraController!.initialize();
-    update();
+    selectedCameraIndex.value = (selectedCameraIndex.value + 1) % cameras.length;
+
+    // Wait a bit before reinitializing to prevent race conditions
+    Future.delayed(Duration(milliseconds: 100), () async {
+      await initializeCamera();
+    });
   }
-
   Future<void> captureMedia(BuildContext context) async {
-    try {
-      if (isVideoMode.value) {
-        if (isRecording.value) {
-          final video = await cameraController?.stopVideoRecording();
-          isRecording.value = false;
-          Get.to(() => PreviewStatusByCam(captured: video?.path ?? ""));
-        } else {
-          await cameraController?.prepareForVideoRecording();
-          await cameraController?.startVideoRecording();
-          isRecording.value = true;
-        }
-      } else {
-        final image = await cameraController?.takePicture();
-        Get.to(() => PreviewStatusByCam(captured: image?.path));
+    if (cameraController != null && cameraController!.value.isInitialized) {
+      try {
+        XFile file = await cameraController!.takePicture();
+        print("Picture taken: ${file.path}");
+      } catch (e) {
+        print("Error capturing media: $e");
       }
-    } catch (e) {
-      print("Error capturing media: $e");
-      Get.snackbar('Error', 'Failed to capture media.');
     }
-  }
-
-  void toggleMode() {
-    isVideoMode.value = !isVideoMode.value;
   }
 }
+

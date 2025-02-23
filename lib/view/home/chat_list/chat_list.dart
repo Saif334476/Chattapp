@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -16,144 +15,159 @@ class ChatList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {
-        return Center(
-          child: Stack(
-            children: [
-              Stack(children: [
-                Container(color: Color(0xff1A2941),),
-        controller.chatList.isNotEmpty
-        ?
-              ListView.separated(
-                      itemCount: controller.chatList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final chat = controller.chatList[index];
-                        var chatId = chat.chatId;
-                        var lastMessage = chat.lastMessage;
-                        'No messages yet';
-                        var lastMessageTime = chat.lastMessageTime != null
-                            ? (chat.lastMessageTime)
-                            : DateTime.now();
-                        var formattedTime =
-                            DateFormat('HH:mm').format(lastMessageTime);
-                        return ListTile(
-                          tileColor: const Color(0xff1A2941),
-                          //  textColor:const Color(0xc7cdd1ff) ,
+        return Stack(
+          children: [
+            // 🎨 Gradient Background Instead of Solid Color
+            Container(
+              decoration:
+                  BoxDecoration(color: Color(0xFF81C784).withOpacity(0.1)),
+            ),
+
+            // 📝 Chat List
+            controller.chatList.isNotEmpty
+                ? ListView.separated(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    itemCount: controller.chatList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final chat = controller.chatList[index];
+                      var chatId = chat.chatId;
+                      var lastMessage = chat.lastMessage;
+                      var lastMessageTime =
+                          chat.lastMessageTime ?? DateTime.now();
+                      var formattedTime =
+                          DateFormat('HH:mm').format(lastMessageTime);
+
+                      return Card(
+                        margin: const EdgeInsets.symmetric(vertical: 5),
+                        child: ListTile(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChatView(
-                                        id: chatId,
-                                        recipentsId: chat.participants
-                                            .firstWhere((id) =>
-                                                id !=
-                                                FirebaseAuth.instance
-                                                    .currentUser?.email))));
+                            Get.to(
+                                () => ChatView(
+                                      id: chatId,
+                                      recipentsId: chat.participants.firstWhere(
+                                        (id) =>
+                                            id !=
+                                            FirebaseAuth
+                                                .instance.currentUser?.email,
+                                      ),
+                                      type: "single",
+                                    ),
+                                transition: Transition.fade,
+                                duration: Duration(milliseconds: 300));
+                            //
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => ChatView(
+                            //       id: chatId,
+                            //       recipentsId: chat.participants.firstWhere(
+                            //         (id) =>
+                            //             id !=
+                            //             FirebaseAuth
+                            //                 .instance.currentUser?.email,
+                            //       ),type: "single",
+                            //     ),
+                            //   ),
+                            // );
                           },
                           leading: Container(
                             padding: EdgeInsets.all(1),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: Colors.transparent),
-                              height: 50,
-                              width: 50,
-                              child:ClipOval(
-                                  child: Image.asset(
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: Color(0xFF388E3C), width: 1)),
+                            child: ClipOval(
+                              child: Image.asset(
                                 "assets/person.webp",
-                                fit: BoxFit.fill,
-                              ))),
-                          title: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              child: Text(
-                                chatId,
-                                textAlign: TextAlign.start,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w900,color: Colors.white),
-                              )),
+                                height: 50,
+                                width: 50,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          title: Column(
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                child: Text(
+                                  chatId,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87,
+                                      ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              )
+                            ],
+                          ),
                           subtitle: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
-                                  height: 20,
-                                  child: Text(
-                                    lastMessage,
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,style: TextStyle( color: Colors.white70),
-                                  )),
-                              Text(formattedTime,style: TextStyle( color: Colors.white70),)
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                child: Text(
+                                  lastMessage,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: Colors.black54,
+                                      ),
+                                ),
+                              ),
+                              Text(
+                                formattedTime,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color: Colors.black54,
+                                    ),
+                              ),
                             ],
                           ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(
-                          height: 1,
-                          child: Container(
-                            color: Colors.white70,
-                          ),
-                        );
-                      },
-                    )
-                  : Center(
-                      child: Text("No Active Chats",style: TextStyle(color: Colors.white),),
-                    ),]),
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.7,
-                left: MediaQuery.of(context).size.width * 0.75,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.transparent),
-                    elevation: MaterialStateProperty.all(0),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            10), // Adjust the border radius as needed
-                      ),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const SizedBox(height: 2),
+                  )
+                : const Center(
+                    child: Text(
+                      "No Active Chats",
+                      style: TextStyle(color: Color(0xFF388E3C), fontSize: 16),
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ContactList()));
-                  },
-                  child: Material(
-                    color: Colors.transparent,
-                    shape: const ContinuousRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(15),
-                            topLeft: Radius.circular(15),
-                            bottomLeft: Radius.circular(15),
-                            bottomRight: Radius.zero)),
-                    elevation: 5,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(15),
-                            topLeft: Radius.circular(15),
-                            bottomLeft: Radius.circular(15),
-                            bottomRight: Radius.zero),
-                        color: Color(0xff00112B),
-                      ),
-                      // color: const Color(0xff4ECB5C),
-                      padding: const EdgeInsets.all(8),
-                      child: const Icon(
-                        Icons.add_comment,
-                        size: 35,
-                        color: Colors
-                            .white, // Icon color inside the filled container
-                      ),
-                    ),
-                  ),
+
+            // ➕ Floating Action Button for Adding Contacts
+            Positioned(
+              bottom: 20,
+              right: 20,
+              child: FloatingActionButton(
+                backgroundColor: Color(0xFF388E3C), // Matches the theme
+                elevation: 2,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ContactList()));
+                },
+                child: const Icon(
+                  Icons.add_comment,
+                  color: Colors.white, // Blue accent color
+                  size: 30,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       }),
     );

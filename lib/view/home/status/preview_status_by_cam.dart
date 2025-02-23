@@ -50,24 +50,31 @@ class _PreviewStatusByCamState extends State<PreviewStatusByCam> {
               child: isVideo
                   ? _videoController != null && _videoController!.value.isInitialized
                       ? Stack(
+                alignment: Alignment.topLeft,
                           children: [
                             AspectRatio(
                               aspectRatio: _videoController!.value.aspectRatio,
                               child: VideoPlayer(_videoController!),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.height * 0.05,
+                              top: 50,
                               left: 10,
-                              child: FloatingActionButton(
-                                backgroundColor: Color(0xff1A2941),
-                                onPressed: () => Navigator.pop(context),
-                                child: Icon(
-                                  Icons.close,
-                                  color: Colors.white,
-                                  size: 30,
+                              child: Material(
+                                color: Colors.transparent, // Prevents background issues
+                                child: FloatingActionButton(
+                                  heroTag: "unique_tag_for_close_button",
+                                  backgroundColor: Color(0xff1A2941),
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
                                 ),
+
                               ),
                             ),
+
                           ],
                         )
                       : CircularProgressIndicator()

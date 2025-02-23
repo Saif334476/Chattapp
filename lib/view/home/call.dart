@@ -14,12 +14,12 @@ class _CallViewState extends State<CallView> {
     return Scaffold(
       body: Stack(children: [
         Container(
-          color: Color(0xff1A2941),
+
         ),
         Center(
           child: Text(
             "Call logs will appear here",
-            style: TextStyle(fontSize: 25, color: Colors.white),
+            style: TextStyle(fontSize: 25, color: Colors.black),
           ),
         )
       ]),

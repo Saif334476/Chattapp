@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 //import 'package:image_picker/image_picker.dart';
-import 'package:whatsapp_clone/view/login/login.dart';
+import 'package:whatsapp_clone/view/auth/login.dart';
 import '../../reusable_widgets/profile_pic_widget.dart';
 import '../../reusable_widgets/reusable_widgets.dart';
 
