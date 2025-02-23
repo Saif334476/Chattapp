@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:whatsapp_clone/view/auth/login.dart';
 import '../../reusable_widgets/profile_pic_widget.dart';
@@ -162,10 +164,7 @@ class _RegistrationState extends State<Registration> {
                       Center(
                         child: TextButton(
                           onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => const LoginView()),
-                            );
+                        Get.back();
                           },
                           child: Text("Already have an account? Login", style: TextStyle(color: Colors.white70)),
                         ),

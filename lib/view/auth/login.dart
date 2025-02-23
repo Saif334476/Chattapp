@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp_clone/Controllers/contact_list_controller.dart';
 import 'package:whatsapp_clone/view/auth/registration.dart';
-import '../../chat_bubble.dart';
+
+import '../../animated.dart';
 import '../../reusable_widgets/custom_button.dart';
 import '../home/home.dart';
 import '../home/settings_view/password_reset_view.dart';
@@ -171,12 +172,15 @@ class _LoginViewState extends State<LoginView> {
                     Center(
                       child: TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Registration(),
-                            ),
-                          );
+                          Get.to(Registration(),
+                              transition: Transition.rightToLeft,
+                              duration: Duration(milliseconds: 300));
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => const Registration(),
+                          //   ),
+                          // );
                         },
                         child: Text(
                           "Don't have an account? Sign up",
