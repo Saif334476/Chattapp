@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/view/home/settings_view/settings_view.dart';
-import 'package:whatsapp_clone/view/home/status/status_view.dart';
+import 'package:whatsapp_clone/view/nav_bar/settings_view/settings_view.dart';
+import 'package:whatsapp_clone/view/nav_bar/status/status_view.dart';
 import 'chat_list/chat_list.dart';
 import 'call.dart';
 import 'group/group_list.dart';

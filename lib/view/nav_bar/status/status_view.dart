@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:whatsapp_clone/reusable_widgets/camera_recent_media.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:camera/camera.dart';
 import 'dart:typed_data';
 import 'package:whatsapp_clone/Controllers/status_controller.dart';
 import 'package:get/get.dart';
-import 'package:whatsapp_clone/view/home/status/text_status.dart';
 import 'package:whatsapp_clone/reusable_widgets/camera_screen.dart';
-import 'package:whatsapp_clone/Bindings/bindings.dart';
+
 
 class StatusView extends StatefulWidget {
   const StatusView({super.key});

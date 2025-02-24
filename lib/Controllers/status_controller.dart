@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:whatsapp_clone/view/home/status/preview_status_by_cam.dart';
+
 
 class ColorController extends GetxController {
   final List<Color> colorList = [

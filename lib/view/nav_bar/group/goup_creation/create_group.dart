@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp_clone/Controllers/contact_list_controller.dart';
-import 'package:whatsapp_clone/view/home/group/goup_creation/controller.dart';
-import 'package:whatsapp_clone/view/home/group/goup_creation/group_description.dart';
+
+
+import 'controller.dart';
+import 'group_description.dart';
 
 class CreateGroup extends StatelessWidget {
   const CreateGroup({super.key});

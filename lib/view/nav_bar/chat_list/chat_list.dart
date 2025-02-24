@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
-import 'package:whatsapp_clone/view/home/chat_list/contacts_list.dart';
 import '../chat/chat.dart';
 import '../../../Controllers/contact_list_controller.dart';
+import 'contacts_list.dart';
 
 class ChatList extends StatelessWidget {
   ChatList({super.key});

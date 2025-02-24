@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:whatsapp_clone/view/home/status/text_status.dart';
 import 'package:get/get.dart';
+import '../view/nav_bar/status/text_status.dart';
 import 'reusable_widgets.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:whatsapp_clone/Controllers/status_controller.dart';
-import 'package:flutter/services.dart';
+
 
 class CameraScreen extends StatelessWidget {
   final CameraScreenController cameraController =

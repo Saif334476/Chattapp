@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp_clone/Controllers/contact_list_controller.dart';
 import 'package:whatsapp_clone/view/auth/registration.dart';
-
 import '../../animated.dart';
 import '../../reusable_widgets/custom_button.dart';
-import '../home/home.dart';
-import '../home/settings_view/password_reset_view.dart';
+import '../nav_bar/home.dart';
+import '../nav_bar/settings_view/password_reset_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
