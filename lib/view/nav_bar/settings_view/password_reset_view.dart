@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:whatsapp_clone/reusable_widgets/reusable_widgets.dart';
 
+import '../../../reusable_widgets/custom_text_field.dart';
+
 class PasswordResetView extends StatefulWidget {
   const PasswordResetView({super.key});
 

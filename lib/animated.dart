@@ -1,87 +1,93 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 
-class AnimatedChatBubble extends StatefulWidget {
+class BouncingDots extends StatefulWidget {
   @override
-  _AnimatedChatBubbleState createState() => _AnimatedChatBubbleState();
+  _BouncingDotsState createState() => _BouncingDotsState();
 }
 
-class _AnimatedChatBubbleState extends State<AnimatedChatBubble>
+class _BouncingDotsState extends State<BouncingDots>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _animation;
-  int dotCount = 1; // Start with 1 dot
-  late Timer _timer;
+  late Animation<double> _animation1;
+  late Animation<double> _animation2;
+  late Animation<double> _animation3;
 
   @override
   void initState() {
     super.initState();
-
-    // Smooth scale animation
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000), // Slower scaling
+      duration: Duration(milliseconds: 800),
     )..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: 1.0, end: 1.1).animate(
+    _animation1 = Tween<double>(begin: 0, end: -8).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
 
-    // Timer to update dots every **600ms** (slower than before)
-    _timer = Timer.periodic(const Duration(milliseconds: 600), (timer) {
-      setState(() {
-        dotCount = (dotCount % 3) + 1; // Cycle through 1 → 2 → 3 dots
-      });
-    });
+    _animation2 = Tween<double>(begin: 0, end: -8).animate(
+      CurvedAnimation(parent: _controller, curve: Interval(0.2, 1.0, curve: Curves.easeInOut)),
+    );
+
+    _animation3 = Tween<double>(begin: 0, end: -8).animate(
+      CurvedAnimation(parent: _controller, curve: Interval(0.4, 1.0, curve: Curves.easeInOut)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 50,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          AnimatedBuilder(
+            animation: _animation1,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _animation1.value),
+                child: Dot(),
+              );
+            },
+          ),
+          AnimatedBuilder(
+            animation: _animation2,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _animation2.value),
+                child: Dot(),
+              );
+            },
+          ),
+          AnimatedBuilder(
+            animation: _animation3,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _animation3.value),
+                child: Dot(),
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    _timer.cancel(); // Stop the timer when widget is removed
     super.dispose();
   }
+}
 
+class Dot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _animation,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        decoration: BoxDecoration(
-          color: Color(0xFF2074B5), // Primary theme color
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 8,
-              offset: const Offset(2, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.chat_bubble, color: Colors.white, size: 22),
-            const SizedBox(width: 8),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 400), // Smooth switch
-              transitionBuilder: (child, animation) {
-                return FadeTransition(opacity: animation, child: child);
-              },
-              child: Text(
-                "." * dotCount, // Dynamically update dots
-                key: ValueKey<int>(dotCount),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  letterSpacing: 1.2,
-                ),
-              ),
-            ),
-          ],
-        ),
+    return Container(
+      width: 12,
+      height: 12,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
       ),
     );
   }

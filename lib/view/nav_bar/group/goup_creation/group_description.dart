@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp_clone/reusable_widgets/reusable_widgets.dart';
+import '../../../../reusable_widgets/custom_text_field.dart';
 import '../../../../reusable_widgets/profile_pic_widget.dart';
 import '../../chat/chat.dart';
 import 'controller.dart';

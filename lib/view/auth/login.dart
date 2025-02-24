@@ -5,6 +5,8 @@ import 'package:whatsapp_clone/Controllers/contact_list_controller.dart';
 import 'package:whatsapp_clone/view/auth/registration.dart';
 import '../../animated.dart';
 import '../../reusable_widgets/custom_button.dart';
+import '../../reusable_widgets/custom_text_field.dart';
+import '../../reusable_widgets/reusable_widgets.dart';
 import '../nav_bar/home.dart';
 import '../nav_bar/settings_view/password_reset_view.dart';
 
@@ -18,6 +20,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isObscured = true;
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -32,31 +35,84 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
+          // Gradient Background
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF4CAF50), Color(0xFF81C784)],
+                colors: [
+                  Color(0xFF1B5E20), // Forest Green
+                  Color(0xFF4CAF50), // Leaf Green
+                  Color(0xFF81C784),
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
             ),
           ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Form(
-                key: _formKey,
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min, // Centered content
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: MediaQuery.sizeOf(context).height * 0.15,
+                      height: MediaQuery.of(context).size.height * 0.1,
                     ),
-                    Center(child: AnimatedChatBubble()), // Animated bubble
-                    const SizedBox(height: 50),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "assets/chatn.png", // Replace with your logo
+                              height: 100,
+                              width: 130,
+                              color: Colors.white,
+                            ),
+                            SizedBox(height: 10),
+                            BouncingDots(),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: 2, // Width of the divider
+                                height: 100, // Adjust the height as needed
+                                color: Colors.white
+                                    .withOpacity(0.5), // Semi-transparent white
+                              ),
+                            ),
+                          ],
+                        ),
+                        Flexible(
+                          child: Text(
+                            "Beyond Messages, We Build Connections",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                            softWrap: true, // Allow text wrapping
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    // Welcome Text
                     Text(
                       "Welcome Back!",
                       style: TextStyle(
@@ -71,20 +127,12 @@ class _LoginViewState extends State<LoginView> {
                       style: TextStyle(fontSize: 16, color: Colors.white70),
                     ),
                     SizedBox(height: 40),
-                    TextFormField(
+                    textFormField(
+                      "Email Address",
+                      Icon(Icons.email_rounded, color: Colors.white),
+                      false,
+                      keyboard: TextInputType.emailAddress,
                       controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: "Email Address",
-                        prefixIcon: Icon(Icons.email, color: Colors.white),
-                        filled: true,
-                        fillColor: Colors.white.withOpacity(0.2),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        labelStyle: TextStyle(color: Colors.white70),
-                      ),
-                      style: TextStyle(color: Colors.white),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Enter your email";
@@ -94,31 +142,34 @@ class _LoginViewState extends State<LoginView> {
                         }
                         return null;
                       },
+                      maxLines: 1,
                     ),
+
                     SizedBox(height: 15),
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: "Password",
-                        prefixIcon: Icon(Icons.lock, color: Colors.white),
-                        filled: true,
-                        fillColor: Colors.white.withOpacity(0.2),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
+                    textFormField(
+                      "Password",
+                      Icon(Icons.lock, color: Colors.white),
+                      _isObscured,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isObscured ? Icons.visibility_off : Icons.visibility,
+                          color: Colors.white70,
                         ),
-                        labelStyle: TextStyle(color: Colors.white70),
+                        onPressed: () {
+                          setState(() {
+                            _isObscured = !_isObscured;
+                          });
+                        },
                       ),
-                      style: TextStyle(color: Colors.white),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Enter your password";
-                        }
-                        return null;
-                      },
+                      keyboard: TextInputType.text,
+                      controller: _passwordController,
+                      validator: (value) =>
+                          value!.isEmpty ? "Enter your password" : null,
+                      maxLines: 1,
                     ),
+
                     SizedBox(height: 10),
+
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
@@ -135,6 +186,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     SizedBox(height: 30),
+
                     CustomButton(
                       text: "LOGIN",
                       isLoading: _isLoading,
@@ -168,18 +220,13 @@ class _LoginViewState extends State<LoginView> {
                       },
                     ),
                     SizedBox(height: 10),
+
                     Center(
                       child: TextButton(
                         onPressed: () {
                           Get.to(Registration(),
                               transition: Transition.rightToLeft,
                               duration: Duration(milliseconds: 300));
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const Registration(),
-                          //   ),
-                          // );
                         },
                         child: Text(
                           "Don't have an account? Sign up",

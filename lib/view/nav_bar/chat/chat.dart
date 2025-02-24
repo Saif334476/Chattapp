@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/reusable_widgets/reusable_widgets.dart';
+import '../../../reusable_widgets/custom_text_field.dart';
 import '../Widgets/message.dart';
 import 'package:get/get.dart';
 import '../../../Controllers/chat_controller.dart';
@@ -40,7 +41,7 @@ class ChatView extends StatelessWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.6,
                 child: Text(
-                  name!,
+                  name??"",
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,color: Colors.white,
 
