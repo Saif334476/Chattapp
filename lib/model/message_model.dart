@@ -10,6 +10,7 @@ class MessageModel {
   final bool isSeen;
 
 
+
   MessageModel({
     required this.messageId,
     required this.message,
@@ -18,6 +19,7 @@ class MessageModel {
     required this.sentAt,
     required this.isDelivered,
     required this.isSeen,
+
   });
 
 

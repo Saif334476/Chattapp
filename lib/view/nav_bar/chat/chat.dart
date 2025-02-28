@@ -69,7 +69,7 @@ class ChatView extends StatelessWidget {
                           itemCount: controller.messages.length,
                           itemBuilder: (context, index) {
                             return MessageView(
-                                messageModeled: controller.messages[index]);
+                                messageModeled: controller.messages[index],type:"Group");
                           },
                           separatorBuilder: (context, index) {
                             return const SizedBox(height: 5);

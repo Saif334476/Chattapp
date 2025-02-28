@@ -99,6 +99,7 @@ class _GroupListState extends State<GroupList> {
                               onTap: () {
                                 Get.to(
                                     () => ChatView(name: chatName,
+                                          type:"Group",
                                           id: chatId,
                                           recipentsId:
                                               chat.participants.firstWhere(
