@@ -13,7 +13,10 @@ class MessageView extends StatelessWidget {
         messageModeled.senderId == FirebaseAuth.instance.currentUser?.uid;
     bool isSystem= messageModeled.senderId=="system";
     return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      // alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: isMe
+          ? (isSystem ? Alignment.center : Alignment.centerRight)
+          : Alignment.centerLeft,
       child: IntrinsicWidth(
         child: Container(
           constraints: BoxConstraints(

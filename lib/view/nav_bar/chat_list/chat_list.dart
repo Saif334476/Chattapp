@@ -33,8 +33,22 @@ class ChatList extends StatelessWidget {
                           chat.lastMessageTime ?? DateTime.now();
                       var formattedTime =
                           DateFormat('HH:mm').format(lastMessageTime);
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 5),
+                      return Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xFF388E3C).withOpacity(0.2), // Shadow color
+                              spreadRadius: 1, // How much the shadow spreads
+                              blurRadius: 6, // Blurriness of the shadow
+                              offset: Offset(2, 4), // X (right) & Y (down) shadow positioning
+                            ),
+                          ],
+                          color: Colors.white,
+                          border: Border(
+                            left: BorderSide(color: Color(0xFF388E3C), width:MediaQuery.sizeOf(context).width*0.02),
+                          ),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                         child: ListTile(
                           onTap: () {
                             Get.to(
@@ -42,7 +56,8 @@ class ChatList extends StatelessWidget {
                                       id: chat.chatId,
                                       name: controller
                                           .recipientNames[chat.chatId],
-                                      recipentsId: chat.participants.firstWhere(
+                                      recipentsId:
+                                          chat.participants.firstWhere(
                                         (id) =>
                                             id !=
                                             FirebaseAuth
@@ -86,9 +101,11 @@ class ChatList extends StatelessWidget {
                           title: Column(
                             children: [
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.7,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.7,
                                 child: Text(
-                                  controller.recipientNames[chat.chatId] ?? "",
+                                  controller.recipientNames[chat.chatId] ??
+                                      "",
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium
@@ -108,7 +125,8 @@ class ChatList extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.5,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.5,
                                 child: Text(
                                   lastMessage,
                                   overflow: TextOverflow.ellipsis,
@@ -135,7 +153,7 @@ class ChatList extends StatelessWidget {
                       );
                     },
                     separatorBuilder: (BuildContext context, int index) =>
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 8),
                   )
                 : const Center(
                     child: Text(

@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp_clone/Controllers/contact_list_controller.dart';
 import 'package:whatsapp_clone/view/auth/registration.dart';
-import '../../animated.dart';
 import '../../reusable_widgets/custom_button.dart';
 import '../../reusable_widgets/custom_text_field.dart';
-import '../../reusable_widgets/reusable_widgets.dart';
 import '../nav_bar/home.dart';
 import '../nav_bar/settings_view/password_reset_view.dart';
 
@@ -40,17 +38,8 @@ class _LoginViewState extends State<LoginView> {
         children: [
           // Gradient Background
           Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF1B5E20), // Forest Green
-                  Color(0xFF4CAF50), // Leaf Green
-                  Color(0xFF81C784),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
+            decoration:
+                BoxDecoration(color: Color(0xFF81C784).withOpacity(0.1)),
           ),
 
           Padding(
@@ -73,38 +62,33 @@ class _LoginViewState extends State<LoginView> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Image.asset(
-                              "assets/chatn.png", // Replace with your logo
+                              "assets/chatn.png",
                               height: 100,
                               width: 130,
-                              color: Colors.white,
+                              color: Color(0xFF81C784),
                             ),
                             SizedBox(height: 10),
-                            BouncingDots(),
                           ],
                         ),
-                        Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                width: 2, // Width of the divider
-                                height: 100, // Adjust the height as needed
-                                color: Colors.white
-                                    .withOpacity(0.5), // Semi-transparent white
-                              ),
-                            ),
-                          ],
+
+                        // Divider with spacing
+                        SizedBox(width: 16), // Adjust width for spacing
+                        Container(
+                          width: 2, // Width of the divider
+                          height: 80, // Adjust height to align with content
+                          color: Color(0xFF388E3C).withOpacity(0.5),
                         ),
-                        Flexible(
+                        SizedBox(width: 16), // Adjust spacing after divider
+                        Expanded(
                           child: Text(
                             "Beyond Messages, We Build Connections",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                              color: Color(0xFF388E3C).withOpacity(0.9),
                             ),
                             textAlign: TextAlign.center,
-                            softWrap: true, // Allow text wrapping
+                            softWrap: true,
                           ),
                         ),
                       ],
@@ -118,18 +102,20 @@ class _LoginViewState extends State<LoginView> {
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Color(0xFF388E3C),
                       ),
                     ),
                     SizedBox(height: 10),
                     Text(
                       "Login to continue",
-                      style: TextStyle(fontSize: 16, color: Colors.white70),
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Color(0xFF388E3C).withOpacity(0.8)),
                     ),
                     SizedBox(height: 40),
                     textFormField(
-                      "Email Address",
-                      Icon(Icons.email_rounded, color: Colors.white),
+                      "E-mail",
+                      Icon(Icons.email_rounded, color: Color(0xFF388E3C)),
                       false,
                       keyboard: TextInputType.emailAddress,
                       controller: _emailController,
@@ -148,12 +134,12 @@ class _LoginViewState extends State<LoginView> {
                     SizedBox(height: 15),
                     textFormField(
                       "Password",
-                      Icon(Icons.lock, color: Colors.white),
+                      Icon(Icons.lock, color: Color(0xFF388E3C)),
                       _isObscured,
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isObscured ? Icons.visibility_off : Icons.visibility,
-                          color: Colors.white70,
+                          color: Color(0xFF388E3C),
                         ),
                         onPressed: () {
                           setState(() {
@@ -174,18 +160,15 @@ class _LoginViewState extends State<LoginView> {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const PasswordResetView(),
-                            ),
-                          );
+                          Get.to(PasswordResetView(),
+                              transition: Transition.rightToLeft,
+                              duration: Duration(milliseconds: 750));
                         },
                         child: Text("Forgot Password?",
-                            style: TextStyle(color: Colors.white70)),
+                            style: TextStyle(color: Color(0xFF388E3C))),
                       ),
                     ),
-                    SizedBox(height: 30),
+                    SizedBox(height: 25),
 
                     CustomButton(
                       text: "LOGIN",
@@ -204,16 +187,19 @@ class _LoginViewState extends State<LoginView> {
                               FirebaseAuth.instance.currentUser?.uid,
                             );
                             setState(() => _isLoading = false);
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const NHomePage(),
-                              ),
-                            );
+                            Get.off(NHomePage(),
+                                transition: Transition.downToUp,
+                                duration: Duration(milliseconds: 700));
                           }).catchError((error) {
                             setState(() => _isLoading = false);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(error.toString())),
+                            Get.snackbar(
+                              "Error",
+                              error.toString(),
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                              margin: EdgeInsets.only(
+                                  bottom: 20, left: 10, right: 10),
                             );
                           });
                         }
@@ -225,12 +211,13 @@ class _LoginViewState extends State<LoginView> {
                       child: TextButton(
                         onPressed: () {
                           Get.to(Registration(),
-                              transition: Transition.rightToLeft,
-                              duration: Duration(milliseconds: 300));
+                              transition: Transition.fadeIn,
+                              duration: Duration(milliseconds: 550),
+                              curve: Curves.easeInOut);
                         },
                         child: Text(
                           "Don't have an account? Sign up",
-                          style: TextStyle(color: Colors.white70),
+                          style: TextStyle(color: Color(0xFF388E3C)),
                         ),
                       ),
                     ),

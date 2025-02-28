@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import '../../../../model/contact_model.dart';
 import '../../../../model/message_model.dart';
@@ -8,6 +9,8 @@ class GroupCreationController extends GetxController {
   RxList<Contact> selectedForGroup = <Contact>[].obs;
   final userEmail = FirebaseAuth.instance.currentUser!.email;
   final uid = FirebaseAuth.instance.currentUser!.uid;
+  TextEditingController groupName = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   void onInit() {
@@ -20,6 +23,7 @@ class GroupCreationController extends GetxController {
     super.onClose();
   }
 
+
   Future<void> sendGreet() async {
     List<String> participants =
     selectedForGroup.map((contact) => contact.email).toList();
@@ -27,28 +31,38 @@ class GroupCreationController extends GetxController {
       participants.add(userEmail!);
     }
     final text = "Group is Created by $userEmail";
-
-    await FirebaseFirestore.instance
+    final chatDocRefId=await FirebaseFirestore.instance
         .collection("Whatsapp Clone")
         .doc("Data")
         .collection("Chats")
-        .doc("chatIds")
+        .doc();
+     await chatDocRefId
         .set({
       "chatType":"group",
+      "name":groupName.text,
       "participants": participants,
       "lastMessage": text,
       "lastMessageTime": DateTime.now(),
       "createdAt": DateTime.now(),
-      "chatId": "chatIds",
+      "chatId": chatDocRefId.id,
     }, SetOptions(merge: true));
     final newMessage = MessageModel(
       messageId: DateTime.now().toString(),
       message: text,
-      senderId: FirebaseAuth.instance.currentUser!.uid,
+      senderId: "System",
       messageType: 'text',
       sentAt: DateTime.now(),
       isDelivered: true,
       isSeen: false,
     );
+
+    await FirebaseFirestore.instance
+        .collection("Whatsapp Clone")
+        .doc("Data")
+        .collection("Chats")
+        .doc(chatDocRefId.id)
+        .collection("Messages")
+        .add(newMessage.toMap());
+
   }
 }

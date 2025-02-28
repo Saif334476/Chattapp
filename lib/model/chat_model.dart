@@ -8,12 +8,13 @@ class Chat {
   DateTime lastMessageTime;
   DateTime createdAt;
   List<String> participants;
+  String? name;
   Chat(
       {required this.chatId,
       required this.createdAt,
       required this.lastMessage,
       required this.lastMessageTime,
-      required this.participants});
+      required this.participants,this.name});
 
   factory Chat.fromJson(Map<String,dynamic> doc) {
     return Chat(
@@ -22,6 +23,7 @@ class Chat {
       createdAt: (doc['createdAt'] as Timestamp).toDate(),
       lastMessageTime: (doc['lastMessageTime']as Timestamp).toDate(),
       participants: List<String>.from(doc['participants']),
+      name: doc['name']
     );
   }
 
@@ -32,6 +34,7 @@ class Chat {
       'createdAt': Timestamp.fromDate(createdAt),
       'lastMessageTime': Timestamp.fromDate(lastMessageTime),
       'participants': participants,
+      'name':name,
     };
   }
 }

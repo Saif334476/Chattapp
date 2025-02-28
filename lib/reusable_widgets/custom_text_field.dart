@@ -18,9 +18,9 @@ TextFormField textFormField(
     keyboardType: keyboard,
     decoration: InputDecoration(
 
-      labelStyle: TextStyle(color: Colors.white70),
+      labelStyle: TextStyle(color: Color(0xFF388E3C).withOpacity(0.8)),
       filled: true,
-      fillColor: Colors.white.withOpacity(0.2),
+      fillColor: Colors.white.withOpacity(0.7),
 //      fillColor: Colors.white,
 //       errorStyle: const TextStyle(color: Colors.red),
 //       errorBorder: OutlineInputBorder(
@@ -29,7 +29,7 @@ TextFormField textFormField(
 //       ),
       border: OutlineInputBorder(
         // borderSide: const BorderSide(color: Color(0xff00112B)),
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(5),
         // borderSide: BorderSide.none,
       ),
       labelText: text,

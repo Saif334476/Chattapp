@@ -64,10 +64,11 @@ class _GroupListState extends State<GroupList> {
                   ? Expanded(
                       child: ListView.separated(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 10),
+                            horizontal: 10, vertical: 10),
                         itemCount: groupListController.chatList.length,
                         itemBuilder: (BuildContext context, int index) {
                           final chat = groupListController.chatList[index];
+                          var chatName=chat.name;
                           var chatId = chat.chatId;
                           var lastMessage = chat.lastMessage;
                           var lastMessageTime =
@@ -75,23 +76,54 @@ class _GroupListState extends State<GroupList> {
                           var formattedTime =
                               DateFormat('HH:mm').format(lastMessageTime);
 
-                          return Card(
+                          return Container(
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xFF388E3C).withOpacity(0.2), // Shadow color
+                                  spreadRadius: 1, // How much the shadow spreads
+                                  blurRadius: 6, // Blurriness of the shadow
+                                  offset: Offset(2, 4), // X (right) & Y (down) shadow positioning
+                                ),
+                              ],
+                              color: Colors.white,
+                              border: Border(
+                                left: BorderSide(
+                                    color: Color(0xFF388E3C),
+                                    width: MediaQuery.sizeOf(context).width *
+                                        0.02),
+                              ),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                             child: ListTile(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ChatView(
-                                      id: chatId,
-                                      recipentsId: chat.participants.firstWhere(
-                                        (id) =>
-                                            id !=
-                                            FirebaseAuth
-                                                .instance.currentUser?.email,
-                                      ),
-                                    ),
-                                  ),
-                                );
+                                Get.to(
+                                    () => ChatView(name: chatName,
+                                          id: chatId,
+                                          recipentsId:
+                                              chat.participants.firstWhere(
+                                            (id) =>
+                                                id !=
+                                                FirebaseAuth.instance
+                                                    .currentUser?.email,
+                                          ),
+                                        ),
+                                    transition: Transition.fade,
+                                    duration: Duration(milliseconds: 300));
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => ChatView(
+                                //       id: chatId,
+                                //       recipentsId: chat.participants.firstWhere(
+                                //         (id) =>
+                                //             id !=
+                                //             FirebaseAuth
+                                //                 .instance.currentUser?.email,
+                                //       ),
+                                //     ),
+                                //   ),
+                                // );
                               },
                               leading: Container(
                                 padding: EdgeInsets.all(1),
@@ -114,7 +146,7 @@ class _GroupListState extends State<GroupList> {
                                     width:
                                         MediaQuery.of(context).size.width * 0.7,
                                     child: Text(
-                                      chatId,
+                                      chatName ??"klij",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium
@@ -163,7 +195,7 @@ class _GroupListState extends State<GroupList> {
                           );
                         },
                         separatorBuilder: (BuildContext context, int index) =>
-                            const SizedBox(height: 2),
+                            const SizedBox(height: 8),
                       ),
                     )
                   : Expanded(
@@ -186,13 +218,11 @@ class _GroupListState extends State<GroupList> {
               backgroundColor: Color(0xFF388E3C), // Matches the theme
               elevation: 2,
               onPressed: () {
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.fade,
-                    childBuilder: (context) => CreateGroup(),
-                  ),
-                );
+                Get.to(
+                        () => CreateGroup(),
+                    transition: Transition.fade,
+                    duration: Duration(milliseconds: 300));
+
               },
               child: const Icon(
                 Icons.group_add_outlined,

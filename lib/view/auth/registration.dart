@@ -35,17 +35,8 @@ class _RegistrationState extends State<Registration> {
       body: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF1B5E20), // Forest Green
-                  Color(0xFF4CAF50), // Leaf Green
-                  Color(0xFF81C784),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
+            decoration:
+                BoxDecoration(color: Color(0xFF81C784).withOpacity(0.1)),
           ),
           SingleChildScrollView(
             child: Padding(
@@ -63,13 +54,13 @@ class _RegistrationState extends State<Registration> {
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Color(0xFF388E3C),
                       ),
                     ),
                     SizedBox(height: 10),
                     Text(
                       "Sign up to get started",
-                      style: TextStyle(fontSize: 16, color: Colors.white70),
+                      style: TextStyle(fontSize: 16, color: Color(0xFF388E3C)),
                     ),
                     SizedBox(height: 30),
                     ProfilePicWidget(
@@ -83,7 +74,7 @@ class _RegistrationState extends State<Registration> {
                     SizedBox(height: 20),
                     textFormField(
                       "Enter your name",
-                      Icon(Icons.person, color: Colors.white),
+                      Icon(Icons.person, color: Color(0xFF388E3C)),
                       false,
                       keyboard: TextInputType.emailAddress,
                       controller: _nameController,
@@ -98,11 +89,10 @@ class _RegistrationState extends State<Registration> {
                       },
                       maxLines: 1,
                     ),
-
                     SizedBox(height: 15),
                     textFormField(
                       "Enter your E-mail",
-                      Icon(Icons.email_rounded, color: Colors.white),
+                      Icon(Icons.email_rounded, color: Color(0xFF388E3C)),
                       false,
                       keyboard: TextInputType.emailAddress,
                       controller: _emailController,
@@ -113,14 +103,14 @@ class _RegistrationState extends State<Registration> {
                     SizedBox(height: 15),
                     textFormField(
                       "Create Password",
-                      Icon(Icons.lock, color: Colors.white),
+                      Icon(Icons.lock, color: Color(0xFF388E3C)),
                       _createObscured,
                       suffixIcon: IconButton(
                         icon: Icon(
                           _createObscured
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          color: Colors.white70,
+                          color: Color(0xFF388E3C),
                         ),
                         onPressed: () {
                           setState(() {
@@ -134,27 +124,18 @@ class _RegistrationState extends State<Registration> {
                           value!.isEmpty ? "Create Password" : null,
                       maxLines: 1,
                     ),
-                    // TextFormField(
-                    //   controller: _passwordController,
-                    //   obscureText: _createObscured,
-                    //   decoration:
-                    //       _inputDecoration("Create Password", Icons.lock),
-                    //   style: TextStyle(color: Colors.white),
-                    //   validator: (value) =>
-                    //       value!.isEmpty ? "Create Password" : null,
-                    // ),
                     SizedBox(height: 15),
                     textFormField(
                       maxLines: 1,
-                      "Create Password",
-                      Icon(Icons.lock, color: Colors.white),
+                      "Confirm Password",
+                      Icon(Icons.lock, color: Color(0xFF388E3C)),
                       _confirmObscured,
                       suffixIcon: IconButton(
                         icon: Icon(
                           _confirmObscured
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          color: Colors.white70,
+                          color: Color(0xFF388E3C),
                         ),
                         onPressed: () {
                           setState(() {
@@ -163,7 +144,7 @@ class _RegistrationState extends State<Registration> {
                         },
                       ),
                       keyboard: TextInputType.text,
-                      controller: _passwordController,
+                      controller: _confirmPasswordController,
                       validator: (value) {
                         if (value!.isEmpty) return "Confirm Password";
                         if (value != _passwordController.text)
@@ -171,29 +152,8 @@ class _RegistrationState extends State<Registration> {
                         return null;
                       },
                     ),
-                    // TextFormField(
-                    //   controller: _confirmPasswordController,
-                    //   obscureText: _confirmObscured,
-                    //   decoration:
-                    //       _inputDecoration("Confirm Password", Icons.lock),
-                    //   style: TextStyle(color: Colors.white),
-                    //   validator: (value) {
-                    //     if (value!.isEmpty) return "Confirm Password";
-                    //     if (value != _passwordController.text)
-                    //       return "Passwords do not match";
-                    //     return null;
-                    //   },
-                    // ),
                     SizedBox(height: 30),
                     CustomButton(
-                      // style: ElevatedButton.styleFrom(
-                      //   backgroundColor: Colors.white,
-                      //   foregroundColor: Colors.green,
-                      //   padding: EdgeInsets.symmetric(vertical: 14),
-                      //   shape: RoundedRectangleBorder(
-                      //     borderRadius: BorderRadius.circular(12),
-                      //   ),
-                      // ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           setState(() => _isLoading = true);
@@ -221,8 +181,15 @@ class _RegistrationState extends State<Registration> {
                             );
                           } catch (error) {
                             setState(() => _isLoading = false);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(error.toString())));
+                            Get.snackbar(
+                              "Error",
+                              error.toString(),
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                              margin: EdgeInsets.only(
+                                  bottom: 20, left: 10, right: 10),
+                            );
                           }
                         }
                       },
@@ -235,7 +202,7 @@ class _RegistrationState extends State<Registration> {
                           Get.back();
                         },
                         child: Text("Already have an account? Login",
-                            style: TextStyle(color: Colors.white70)),
+                            style: TextStyle(color: Color(0xFF388E3C))),
                       ),
                     ),
                   ],

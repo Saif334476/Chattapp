@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp_clone/Controllers/contact_list_controller.dart';
 
-
 import 'controller.dart';
 import 'group_description.dart';
 
@@ -76,41 +75,72 @@ class CreateGroup extends StatelessWidget {
                             child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return Card(
-                                    color: Color(0xFF91C784),
-                                    child: Container(
-                                      margin: EdgeInsets.only(
-                                          left: 10, right: 10, top: 10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(2),
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                    color: Color(0xFF4CAF50))),
-                                            height: 45,
-                                            child: ClipOval(
-                                              child: Image.asset(
-                                                "assets/person.webp",
+                                  return Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Card(
+                                        color: Color(0xFF91C784),
+                                        child: Container(
+                                          margin: EdgeInsets.only(
+                                              left: 10, right: 10, top: 10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(2),
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        color:
+                                                            Color(0xFF4CAF50))),
+                                                height: 45,
+                                                child: ClipOval(
+                                                  child: Image.asset(
+                                                    "assets/person.webp",
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                              SizedBox(
+                                                  width: 60,
+                                                  child: Text(
+                                                    controller
+                                                        .selectedForGroup[index]
+                                                        .email,
+                                                    style: TextStyle(
+                                                        overflow: TextOverflow
+                                                            .ellipsis),
+                                                  ))
+                                            ],
                                           ),
-                                          SizedBox(
-                                              width: 60,
-                                              child: Text(
-                                                controller
-                                                    .selectedForGroup[index]
-                                                    .email,
-                                                style: TextStyle(
-                                                    overflow:
-                                                        TextOverflow.ellipsis),
-                                              ))
-                                        ],
+                                        ),
                                       ),
-                                    ),
+                                      Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                           controller.selectedForGroup.removeAt(index);
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              shape: BoxShape.circle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black26,
+                                                  blurRadius: 4, // Adds depth
+                                                  spreadRadius: 1,
+                                                )
+                                              ],
+                                            ),
+                                            height: 22,
+                                            width: 22,
+                                            child: Icon(Icons.close, size: 14, color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   );
                                 },
                                 separatorBuilder:
@@ -124,7 +154,47 @@ class CreateGroup extends StatelessWidget {
                           )
                         ],
                       )
-                    : Container(),
+                    : Container(
+                        margin: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xFF388E3C)
+                                  .withOpacity(0.2), // Shadow color
+                              spreadRadius: 1, // How much the shadow spreads
+                              blurRadius: 6, // Blurriness of the shadow
+                              offset: Offset(2,
+                                  4), // X (right) & Y (down) shadow positioning
+                            ),
+                          ],
+                          color: Colors.white,
+                          border: Border(
+                            left: BorderSide(
+                                color: Color(0xFF388E3C),
+                                width: MediaQuery.sizeOf(context).width * 0.02),
+                          ),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.1,
+                              child: Image.asset(
+                                "assets/tap.png",
+                                color: Color(0xFF388E3C),
+                              ),
+                            ),
+                            Text(
+                              "Tap to select contacts from below",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF388E3C),
+                                  fontSize: 15),
+                            ),
+                          ],
+                        )),
                 Expanded(
                   child: ListView.separated(
                     itemCount: contactController.contactList.length,
@@ -141,8 +211,7 @@ class CreateGroup extends StatelessWidget {
                         //     : Colors.white,
                         child: ListTile(
                           trailing: isSelected
-                              ? Icon(Icons.check_circle,
-                              color: Colors.green)
+                              ? Icon(Icons.check_circle, color: Colors.green)
                               : null,
                           onTap: () async {
                             if (!isSelected) {
