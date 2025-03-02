@@ -22,138 +22,146 @@ class ChatList extends StatelessWidget {
                   BoxDecoration(color: Color(0xFF81C784).withOpacity(0.1)),
             ),
             controller.chatList.isNotEmpty
-                ? ListView.separated(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    itemCount: controller.chatList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final chat = controller.chatList[index];
-                      var lastMessage = chat.lastMessage;
-                      var lastMessageTime =
-                          chat.lastMessageTime ?? DateTime.now();
-                      var formattedTime =
-                          DateFormat('HH:mm').format(lastMessageTime);
-                      return Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0xFF388E3C).withOpacity(0.2), // Shadow color
-                              spreadRadius: 1, // How much the shadow spreads
-                              blurRadius: 6, // Blurriness of the shadow
-                              offset: Offset(2, 4), // X (right) & Y (down) shadow positioning
-                            ),
-                          ],
-                          color: Colors.white,
-                          border: Border(
-                            left: BorderSide(color: Color(0xFF388E3C), width:MediaQuery.sizeOf(context).width*0.02),
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: ListTile(
-                          onTap: () {
-                            Get.to(
-                                () => ChatView(
-                                      id: chat.chatId,
-                                      name: controller
-                                          .recipientNames[chat.chatId],
-                                      recipentsId:
-                                          chat.participants.firstWhere(
-                                        (id) =>
-                                            id !=
-                                            FirebaseAuth
-                                                .instance.currentUser?.email,
-                                      ),
-                                      type: "single",
+                ? Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.sizeOf(context).height * 0.13,
+                      ),
+                      Expanded(
+                        child: ListView.separated(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          itemCount: controller.chatList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final chat = controller.chatList[index];
+                            var lastMessage = chat.lastMessage;
+                            var lastMessageTime =
+                                chat.lastMessageTime ?? DateTime.now();
+                            var formattedTime =
+                                DateFormat('HH:mm').format(lastMessageTime);
+                            return Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xFF388E3C).withOpacity(0.2),
+                                    spreadRadius: 1,
+                                    blurRadius: 6,
+                                    offset: Offset(2, 4),
+                                  ),
+                                ],
+                                color: Theme.of(context).cardColor,
+                                border: Border(
+                                  right: BorderSide(
+                                      color: Color(0xFF388E3C),
+                                      width: MediaQuery.sizeOf(context).width *
+                                          0.02),
+                                  left: BorderSide(
+                                      color: Color(0xFF388E3C),
+                                      width: MediaQuery.sizeOf(context).width *
+                                          0.02),
+                                ),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: ListTile(
+                                onTap: () {
+                                  Get.to(
+                                      () => ChatView(
+                                            id: chat.chatId,
+                                            name: controller
+                                                .recipientNames[chat.chatId],
+                                            recipentsId:
+                                                chat.participants.firstWhere(
+                                              (id) =>
+                                                  id !=
+                                                  FirebaseAuth.instance
+                                                      .currentUser?.email,
+                                            ),
+                                            type: "single",
+                                          ),
+                                      transition: Transition.fade,
+                                      duration: Duration(milliseconds: 300));
+                                  //
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => ChatView(
+                                  //       id: chatId,
+                                  //       recipentsId: chat.participants.firstWhere(
+                                  //         (id) =>
+                                  //             id !=
+                                  //             FirebaseAuth
+                                  //                 .instance.currentUser?.email,
+                                  //       ),type: "single",
+                                  //     ),
+                                  //   ),
+                                  // );
+                                },
+                                leading: Container(
+                                  padding: EdgeInsets.all(1),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: Color(0xFF388E3C), width: 1)),
+                                  child: ClipOval(
+                                    child: Image.asset(
+                                      "assets/person.webp",
+                                      height: 50,
+                                      width: 50,
+                                      fit: BoxFit.cover,
                                     ),
-                                transition: Transition.fade,
-                                duration: Duration(milliseconds: 300));
-                            //
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ChatView(
-                            //       id: chatId,
-                            //       recipentsId: chat.participants.firstWhere(
-                            //         (id) =>
-                            //             id !=
-                            //             FirebaseAuth
-                            //                 .instance.currentUser?.email,
-                            //       ),type: "single",
-                            //     ),
-                            //   ),
-                            // );
+                                  ),
+                                ),
+                                title: Column(
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.7,
+                                      child: Text(
+                                        controller
+                                                .recipientNames[chat.chatId] ??
+                                            "",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    )
+                                  ],
+                                ),
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      child: Text(
+                                        lastMessage,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                      ),
+                                    ),
+                                    Text(
+                                      formattedTime,
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
                           },
-                          leading: Container(
-                            padding: EdgeInsets.all(1),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                    color: Color(0xFF388E3C), width: 1)),
-                            child: ClipOval(
-                              child: Image.asset(
-                                "assets/person.webp",
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          title: Column(
-                            children: [
-                              SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.width * 0.7,
-                                child: Text(
-                                  controller.recipientNames[chat.chatId] ??
-                                      "",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black87,
-                                      ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              )
-                            ],
-                          ),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.width * 0.5,
-                                child: Text(
-                                  lastMessage,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        color: Colors.black54,
-                                      ),
-                                ),
-                              ),
-                              Text(
-                                formattedTime,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: Colors.black54,
-                                    ),
-                              ),
-                            ],
-                          ),
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const SizedBox(height: 8),
                         ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const SizedBox(height: 8),
+                      ),
+                    ],
                   )
                 : const Center(
                     child: Text(

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/view/nav_bar/settings_view/settings_view.dart';
-import 'package:whatsapp_clone/view/nav_bar/status/status_view.dart';
+import 'package:get/get.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:animate_do/animate_do.dart';
+import '../../theme/theme_controller.dart';
 import 'chat_list/chat_list.dart';
 import 'call.dart';
 import 'group/group_list.dart';
+import 'status/status_view.dart';
+import 'settings_view/settings_view.dart';
 
 class NHomePage extends StatefulWidget {
   const NHomePage({super.key});
@@ -13,6 +17,8 @@ class NHomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<NHomePage> {
+  final ThemeController themeController = Get.find(); // GetX theme controller
+
   int _currentIndex = 0;
   late PageController _pageController;
 
@@ -22,17 +28,6 @@ class HomePageState extends State<NHomePage> {
     const StatusView(),
     const CallView(),
   ];
-
-  void navigateTo(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInCubic,
-    );
-  }
 
   String _currentScreen() {
     switch (_currentIndex) {
@@ -52,7 +47,7 @@ class HomePageState extends State<NHomePage> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    _pageController = PageController(initialPage: _currentIndex);
   }
 
   @override
@@ -61,142 +56,135 @@ class HomePageState extends State<NHomePage> {
     super.dispose();
   }
 
+  void navigateTo(int index) {
+    _pageController.jumpToPage(index);
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              _currentScreen(),
-              style: TextStyle(
-
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+      body: Stack(
+        children: [
+          PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: _children,
+          ),
+      Obx(() => Positioned(
+            top: MediaQuery.sizeOf(context).height * 0.05,
+            left: 20,
+            right: 20,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: themeController.isDarkMode.value ? Colors.black : const Color(0xFF388E3C),
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _currentScreen(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.camera_alt, color: Colors.white),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.search_rounded, color: Colors.white),
+                      ),
+                      IconButton(
+                        onPressed: () => themeController.toggleTheme(),
+                        icon: Obx(() => Icon(
+                          themeController.isDarkMode.value ? Icons.dark_mode : Icons.light_mode,
+                          color: Colors.white,
+                        )),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.more_vert, color: Colors.white),
+                        onPressed: () {
+                          showMenu(
+                            context: context,
+                            position: const RelativeRect.fromLTRB(100, 80, 0, 0),
+                            items: [
+                              PopupMenuItem(
+                                value: 'settings',
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const SettingsView()));
+                                },
+                                child: const Text('Settings'),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            Row(
-              children: [
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.camera_alt,
-                      color: Colors.white,
-                    )),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.search_rounded,
-                      color: Colors.white,
-                    )),
-                IconButton(
-                  icon: const Icon(
-                    Icons.more_vert,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    final RenderBox button =
-                    context.findRenderObject() as RenderBox;
-                    final Offset position = button.localToGlobal(Offset.zero);
-                    showMenu(
-                      context: context,
-                      position: RelativeRect.fromRect(
-                        Rect.fromLTWH(
-                          position.dx + button.size.width, // Adjust x-position to right
-                          position.dy + 70, // Adjust y-position to be slightly lower
-                          0, // width
-                          0, // height
-                        ),
-                        Rect.fromLTWH(0, 0, MediaQuery.of(context).size.width,
-                            MediaQuery.of(context).size.height),
-                      ),
-                      items: [
-                        PopupMenuItem(
-                          value: 'newGroup',
-                          onTap: () {
-                            // Handle new group
-                          },
-                          child: const Text('New group'),
-                        ),
-                        PopupMenuItem(
-                          value: 'newBroadcast',
-                          onTap: () {
-                            // Handle new broadcast
-                          },
-                          child: const Text('New broadcast'),
-                        ),
-                        PopupMenuItem(
-                          value: 'web',
-                          onTap: () {
-                            // Handle WhatsApp Web
-                          },
-                          child: const Text('WhatsApp Web'),
-                        ),
-                        PopupMenuItem(
-                          value: 'settings',
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                    const SettingsView()));
-                          },
-                          child: const Text('Settings'),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-        backgroundColor: Color(0xFF388E3C), // Dark Green for AppBar
+          )),
+        ],
       ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        children: _children,
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12),
-            topRight: Radius.circular(12),
+      bottomNavigationBar: FadeInUp(
+        child: Obx(() => Container(
+          decoration: BoxDecoration(
+            color: themeController.isDarkMode.value ? Colors.black : Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, -3),
+              ),
+            ],
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0xFF81C784).withOpacity(0.1), // Light Green shadow
-              blurRadius: 8,
-              offset: Offset(0, -3),
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: GNav(
+              gap: 8,
+              activeColor: Colors.white,
+              iconSize: 24,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              duration: const Duration(milliseconds: 300),
+              tabBackgroundColor:
+              themeController.isDarkMode.value ? Colors.grey[800]! : const Color(0xFF388E3C),
+              backgroundColor:
+              themeController.isDarkMode.value ? Colors.black : Colors.white,
+              color: themeController.isDarkMode.value ? Colors.white70 : Colors.grey,
+              tabs: const [
+                GButton(icon: Icons.chat_outlined, text: 'Chats'),
+                GButton(icon: Icons.group_rounded, text: 'Groups'),
+                GButton(icon: Icons.circle_outlined, text: 'Status'),
+                GButton(icon: Icons.phone, text: 'Calls'),
+              ],
+              selectedIndex: _currentIndex,
+              onTabChange: navigateTo,
             ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _currentIndex,
-          iconSize: 30,
-          onTap: navigateTo,
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.chat_outlined), label: 'Chats'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.group_rounded), label: 'Groups'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.circle_outlined), label: 'Status'),
-            BottomNavigationBarItem(icon: Icon(Icons.phone), label: 'Calls'),
-          ],
-          backgroundColor: Color(0xFF388E3C),
-          selectedItemColor: Colors.white, // Dark Green for selected items
-          unselectedItemColor: Colors.grey[1], // Grey for unselected items
-        ),
+          ),
+        )),
       ),
     );
   }
