@@ -6,6 +6,7 @@ import 'package:whatsapp_clone/Controllers/status_controller.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp_clone/reusable_widgets/camera_screen.dart';
 
+import '../../../theme/theme_controller.dart';
 
 class StatusView extends StatefulWidget {
   const StatusView({super.key});
@@ -15,6 +16,7 @@ class StatusView extends StatefulWidget {
 }
 
 class _StatusViewState extends State<StatusView> {
+  final ThemeController themeController = Get.find();
   final picker = ImagePicker();
   List<AssetEntity> recentMedia = [];
   //late CameraController cameraController;
@@ -78,25 +80,23 @@ class _StatusViewState extends State<StatusView> {
     return SafeArea(
         child: Scaffold(
             body: Stack(children: [
-      Container(
-          color: Color(0xFF81C784).withOpacity(0.1)
-          ),
+      Container(color: Color(0xFF81C784).withOpacity(0.1)),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 5,
+            height: MediaQuery.sizeOf(context).height * 0.09,
           ),
-          Container(
-            padding: EdgeInsets.only(left: 15),
-            child: Text(
-              "Status",
-              style: TextStyle(
-                  color: Color(0xFF2C6B39),
-                  fontWeight: FontWeight.w900,
-                  fontSize: 18),
-            ),
-          ),
+          // Container(
+          //   padding: EdgeInsets.only(left: 15),
+          //   child: Text(
+          //     "Status",
+          //     style: TextStyle(
+          //         color: Color(0xFF2C6B39),
+          //         fontWeight: FontWeight.w900,
+          //         fontSize: 18),
+          //   ),
+          // ),
           InkWell(
             onTap: () {},
             child: Card(
@@ -119,26 +119,31 @@ class _StatusViewState extends State<StatusView> {
                         "assets/person.webp",
                         fit: BoxFit.fill,
                       ))),
-                  Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Transform.translate(
-                        offset:
-                            Offset(5, 5), // Adjust the position of the button
-                        child: Container(
+                  Obx(() => Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Transform.translate(
+                          offset: Offset(5, 5), // Adjust position slightly
+                          child: Container(
                             height: 25,
                             width: 25,
                             decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xFF2C6B39),
-                                border: Border.all(color: Color(0xFF2C6B39))),
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.add,
-                                  size: 10,
-                                  color: Colors.white,
-                                ))),
+                              shape: BoxShape.circle,
+                              color: themeController.isDarkMode.value
+                                  ? Colors.grey[800]
+                                  : Color(0xFF388E3C),
+                              border: Border.all(color: Color(0xFF2C6B39)),
+                            ),
+                            child: Center(
+                              // Ensure the icon is centered
+                              child: Icon(
+                                Icons.add,
+                                size: 14, // Adjust size if needed
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
                       ))
                 ]),
                 title: Text(
@@ -201,67 +206,72 @@ class _StatusViewState extends State<StatusView> {
               padding: EdgeInsets.only(left: 15, top: 5),
               child: Text(
                 "Recent Updates",
-                style: TextStyle(color: Color(0xFF4CAF50)),
+                style: Theme.of(context).textTheme.titleSmall,
               ))
         ],
       ),
-      Positioned(
-        top: MediaQuery.of(context).size.height * 0.63,
-        left: MediaQuery.of(context).size.width * 0.8,
-        child: Column(children: [
-          GestureDetector(
-              onTap: () {
-                final StatusScreensControllers statusController =
-                    Get.isRegistered<StatusScreensControllers>()
-                        ? Get.find<StatusScreensControllers>()
-                        : Get.put(StatusScreensControllers());
-                statusController.currentMode.value = "text";
-                Get.to(() => StatusScreen());
-              },
-              child: Material(
-                color: Colors.transparent,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: const Color(0xFF388E3C),
-                  ),
-                  // color: const Color(0xff4ECB5C),
-                  padding: const EdgeInsets.all(8),
-                  child: const Icon(
-                    Icons.mode_edit_outlined,
-                    size: 22,
-                    color:
-                        Colors.white, // Icon color inside the filled container
-                  ),
-                ),
-              )),
-          SizedBox(
-            height: MediaQuery.sizeOf(context).height * 0.02,
-          ),
-          GestureDetector(
-            onTap: () {
-              // _showCameraBottomSheet(context);
-              _showRecentItems();
-            },
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Color(0xFF388E3C),
-                ),
-                // color: const Color(0xff4ECB5C),
-                padding: const EdgeInsets.all(8),
-                child: const Icon(
-                  Icons.add_a_photo,
-                  size: 30,
-                  color: Colors.white, // Icon color inside the filled container
-                ),
+      Obx(() => Positioned(
+            top: MediaQuery.of(context).size.height * 0.63,
+            left: MediaQuery.of(context).size.width * 0.8,
+            child: Column(children: [
+              GestureDetector(
+                  onTap: () {
+                    final StatusScreensControllers statusController =
+                        Get.isRegistered<StatusScreensControllers>()
+                            ? Get.find<StatusScreensControllers>()
+                            : Get.put(StatusScreensControllers());
+                    statusController.currentMode.value = "text";
+                    Get.to(() => StatusScreen());
+                  },
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: themeController.isDarkMode.value
+                            ? Colors.grey[800] // Dark Mode Color
+                            : Color(0xFF388E3C),
+                      ),
+                      // color: const Color(0xff4ECB5C),
+                      padding: const EdgeInsets.all(8),
+                      child: const Icon(
+                        Icons.mode_edit_outlined,
+                        size: 22,
+                        color: Colors
+                            .white, // Icon color inside the filled container
+                      ),
+                    ),
+                  )),
+              SizedBox(
+                height: MediaQuery.sizeOf(context).height * 0.02,
               ),
-            ),
-          )
-        ]),
-      ),
+              GestureDetector(
+                onTap: () {
+                  // _showCameraBottomSheet(context);
+                  _showRecentItems();
+                },
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: themeController.isDarkMode.value
+                          ? Colors.grey[800] // Dark Mode Color
+                          : Color(0xFF388E3C),
+                    ),
+                    // color: const Color(0xff4ECB5C),
+                    padding: const EdgeInsets.all(8),
+                    child: const Icon(
+                      Icons.add_a_photo,
+                      size: 30,
+                      color: Colors
+                          .white, // Icon color inside the filled container
+                    ),
+                  ),
+                ),
+              )
+            ]),
+          )),
     ])));
   }
 

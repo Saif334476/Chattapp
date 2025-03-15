@@ -23,6 +23,11 @@ void main() async {
 
     runApp(MyApp());
   });
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+  ));
 }
 
 class MyApp extends StatelessWidget {

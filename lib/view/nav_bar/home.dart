@@ -17,7 +17,7 @@ class NHomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<NHomePage> {
-  final ThemeController themeController = Get.find(); // GetX theme controller
+  final ThemeController themeController = Get.find();
 
   int _currentIndex = 0;
   late PageController _pageController;
@@ -66,6 +66,7 @@ class HomePageState extends State<NHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       body: Stack(
         children: [
           PageView(
@@ -75,20 +76,20 @@ class HomePageState extends State<NHomePage> {
           ),
       Obx(() => Positioned(
             top: MediaQuery.sizeOf(context).height * 0.05,
-            left: 20,
-            right: 20,
+            left: 10,
+            right: 10,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
               decoration: BoxDecoration(
-                color: themeController.isDarkMode.value ? Colors.black : const Color(0xFF388E3C),
+                color: themeController.isDarkMode.value ? Colors.black : Colors.green.shade700,
                 borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: Colors.black.withOpacity(0.1),
+                //     blurRadius: 8,
+                //     offset: const Offset(0, 2),
+                //   ),
+                // ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,7 +132,7 @@ class HomePageState extends State<NHomePage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => const SettingsView()));
+                                          builder: (context) => SettingsView()));
                                 },
                                 child: const Text('Settings'),
                               ),
@@ -173,7 +174,7 @@ class HomePageState extends State<NHomePage> {
               themeController.isDarkMode.value ? Colors.grey[800]! : const Color(0xFF388E3C),
               backgroundColor:
               themeController.isDarkMode.value ? Colors.black : Colors.white,
-              color: themeController.isDarkMode.value ? Colors.white70 : Colors.grey,
+              color: themeController.isDarkMode.value ? Colors.white70 : Color(0xFF388E3C),
               tabs: const [
                 GButton(icon: Icons.chat_outlined, text: 'Chats'),
                 GButton(icon: Icons.group_rounded, text: 'Groups'),

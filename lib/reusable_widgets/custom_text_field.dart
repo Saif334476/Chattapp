@@ -7,12 +7,12 @@ TextFormField textFormField(
       required String? Function(String?) validator,
       Widget? suffixIcon,
       Function(String)? onChanged,
-      int? maxLines}) {
+      int? maxLines,}) {
   return TextFormField(
     enableSuggestions: true,
     // style: TextStyle(color: Colors.black),
     minLines: 1,
-    maxLines: maxLines,
+
     onChanged: onChanged,
     obscureText: obscuredText,
     keyboardType: keyboard,

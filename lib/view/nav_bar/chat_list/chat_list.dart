@@ -4,12 +4,14 @@ import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import '../chat/chat.dart';
 import '../../../Controllers/contact_list_controller.dart';
+import '../../../theme/theme_controller.dart';
 import 'contacts_list.dart';
 
 class ChatList extends StatelessWidget {
   ChatList({super.key});
 
   final ContactListController controller = Get.put(ContactListController());
+  final ThemeController themeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +21,16 @@ class ChatList extends StatelessWidget {
           children: [
             Container(
               decoration:
-                  BoxDecoration(color: Color(0xFF81C784).withOpacity(0.1)),
+                  BoxDecoration(
+                       color:  Color(0xFF81C784).withOpacity(0.1)
+                    //  color: Colors.grey[100]
+                  ),
             ),
             controller.chatList.isNotEmpty
                 ? Column(
                     children: [
                       SizedBox(
-                        height: MediaQuery.sizeOf(context).height * 0.13,
+                        height: MediaQuery.sizeOf(context).height * 0.12,
                       ),
                       Expanded(
                         child: ListView.separated(
@@ -39,30 +44,34 @@ class ChatList extends StatelessWidget {
                                 chat.lastMessageTime ?? DateTime.now();
                             var formattedTime =
                                 DateFormat('HH:mm').format(lastMessageTime);
-                            return Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xFF388E3C).withOpacity(0.2),
-                                    spreadRadius: 1,
-                                    blurRadius: 6,
-                                    offset: Offset(2, 4),
-                                  ),
-                                ],
-                                color: Theme.of(context).cardColor,
-                                border: Border(
-                                  right: BorderSide(
-                                      color: Color(0xFF388E3C),
-                                      width: MediaQuery.sizeOf(context).width *
-                                          0.02),
-                                  left: BorderSide(
-                                      color: Color(0xFF388E3C),
-                                      width: MediaQuery.sizeOf(context).width *
-                                          0.02),
-                                ),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
+                            return Card(
+                              margin: EdgeInsets.only(bottom: 8),
+                              // child: Obx(() => Container(
+                              //   padding: EdgeInsets.all(5),
+                              //   decoration: BoxDecoration(
+                              //     boxShadow: [
+                              //       BoxShadow(
+                              //         color: Color(0xFF388E3C).withOpacity(0.2),
+                              //         spreadRadius: 1,
+                              //         blurRadius: 6,
+                              //         offset: Offset(2, 4),
+                              //       ),
+                              //     ],
+                              //     color: themeController.isDarkMode.value
+                              //         ? Colors.grey[900]
+                              //         : Colors.white,
+                              //     border: Border(
+                              //       right: BorderSide(
+                              //           color: Color(0xFF388E3C),
+                              //           width: MediaQuery.sizeOf(context).width *
+                              //               0.02),
+                              //       left: BorderSide(
+                              //           color: Color(0xFF388E3C),
+                              //           width: MediaQuery.sizeOf(context).width *
+                              //               0.02),
+                              //     ),
+                              //     borderRadius: BorderRadius.circular(15),
+                              //   ),
                               child: ListTile(
                                 onTap: () {
                                   Get.to(
@@ -81,21 +90,6 @@ class ChatList extends StatelessWidget {
                                           ),
                                       transition: Transition.fade,
                                       duration: Duration(milliseconds: 300));
-                                  //
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => ChatView(
-                                  //       id: chatId,
-                                  //       recipentsId: chat.participants.firstWhere(
-                                  //         (id) =>
-                                  //             id !=
-                                  //             FirebaseAuth
-                                  //                 .instance.currentUser?.email,
-                                  //       ),type: "single",
-                                  //     ),
-                                  //   ),
-                                  // );
                                 },
                                 leading: Container(
                                   padding: EdgeInsets.all(1),
@@ -112,25 +106,12 @@ class ChatList extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                title: Column(
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.7,
-                                      child: Text(
-                                        controller
-                                                .recipientNames[chat.chatId] ??
-                                            "",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    )
-                                  ],
+                                title: Text(
+                                  controller.recipientNames[chat.chatId] ?? "",
+                                  style: themeController.isDarkMode.value
+                                      ? TextStyle(color: Colors.white)
+                                      : TextStyle(color: Colors.black),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Row(
                                   mainAxisAlignment:
@@ -142,53 +123,58 @@ class ChatList extends StatelessWidget {
                                       child: Text(
                                         lastMessage,
                                         overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
+                                        style: themeController.isDarkMode.value
+                                            ? TextStyle(color: Colors.white70)
+                                            : TextStyle(color: Colors.black87),
                                       ),
                                     ),
                                     Text(
                                       formattedTime,
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
+                                      style: themeController.isDarkMode.value
+                                          ? TextStyle(color: Colors.white54)
+                                          : TextStyle(color: Colors.black54),
                                     ),
                                   ],
                                 ),
                               ),
+                              //  )
+                              // ),
                             );
                           },
                           separatorBuilder: (BuildContext context, int index) =>
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 1),
                         ),
                       ),
                     ],
                   )
-                : const Center(
+                : Center(
                     child: Text(
                       "No Active Chats",
-                      style: TextStyle(color: Color(0xFF388E3C), fontSize: 16),
+                      style: themeController.isDarkMode.value
+                          ? TextStyle(color: Colors.white70)
+                          : TextStyle(color: Color(0xFF388E3C)),
                     ),
                   ),
-
-            // ➕ Floating Action Button for Adding Contacts
             Positioned(
               bottom: 20,
               right: 20,
-              child: FloatingActionButton(
-                backgroundColor: Color(0xFF388E3C), // Matches the theme
-                elevation: 2,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ContactList()));
-                },
-                child: const Icon(
-                  Icons.add_comment,
-                  color: Colors.white, // Blue accent color
-                  size: 30,
-                ),
-              ),
+              child: Obx(() => FloatingActionButton(
+                    backgroundColor: themeController.isDarkMode.value
+                        ? Colors.grey[800] // Dark Mode Color
+                        : Color(0xFF388E3C),
+                    elevation: 2,
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ContactList()));
+                    },
+                    child: const Icon(
+                      Icons.add_comment,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  )),
             ),
           ],
         );

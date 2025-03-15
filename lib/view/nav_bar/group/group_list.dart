@@ -17,9 +17,9 @@ class GroupList extends StatefulWidget {
 }
 
 class _GroupListState extends State<GroupList> {
-  final ContactListController controller = Get.put(ContactListController());
-  final GroupListController groupListController =
-  Get.put(GroupListController());
+
+  final GroupListController groupListController = Get.find();
+
   final ThemeController themeController = Get.find();
 
   @override
@@ -34,7 +34,7 @@ class _GroupListState extends State<GroupList> {
           Column(
             children: [
               SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.13,
+                height: MediaQuery.sizeOf(context).height * 0.12,
               ),
 
               InkWell(
@@ -203,6 +203,26 @@ class _GroupListState extends State<GroupList> {
                 ),
               ),
             ],
+          ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: FloatingActionButton(
+              backgroundColor: themeController.isDarkMode.value
+                  ? Colors.grey[800] // Dark Mode Color
+                  : Color(0xFF388E3C),
+              elevation: 2,
+              onPressed: () {
+                Get.to(() => CreateGroup(),
+                    transition: Transition.fade,
+                    duration: Duration(milliseconds: 300));
+              },
+              child: const Icon(
+                Icons.group_add_outlined,
+                color: Colors.white, // Blue accent color
+                size: 30,
+              ),
+            ),
           ),
         ]);
       }),

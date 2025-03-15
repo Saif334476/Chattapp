@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp_clone/Controllers/contact_list_controller.dart';
-import 'package:whatsapp_clone/view/auth/registration.dart';
+import 'package:whatsapp_clone/view/auth/Registration/registration.dart';
 import '../../reusable_widgets/custom_button.dart';
 import '../../reusable_widgets/custom_text_field.dart';
 import '../nav_bar/home.dart';
